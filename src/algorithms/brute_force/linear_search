@@ -1,0 +1,8 @@
+def linear_search(arr_array, int_target):
+
+    for i in range(len(arr_array)):
+        if arr_array[i] == int_target:
+            return i
+        
+        #try ko lang pohhhh
+    
