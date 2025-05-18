@@ -1,0 +1,40 @@
+def optimized_linear_search (arrArray, intTarget):
+    """
+    
+    Description: This function performs a sequential search on the given array, but instead of
+    iterating through every element of the array, it sets the target element to the last element of
+    the array for easier navigation. This is also known as sentinel linear search.
+
+    Parameters:
+    arrArray (list): The array in which to search for the target element.
+    intTarget (int): The target element to search for.
+    
+    Returns:
+    None: The function prints the result of the search directly.
+    
+    Reference: https://www.geeksforgeeks.org/sentinel-linear-search/
+    """
+    
+    intLastIndex = len(arrArray) - 1
+
+    arrArray[len(arrArray)-1] = intTarget
+    i = 0
+
+    while arrArray[i] != intTarget:
+        i += 1
+
+    arrArray[len(arrArray)-1] = intLastIndex
+
+    if ((i < len(arrArray) - 1) or (arrArray[len(arrArray)-1] == intTarget)):
+        print(f"Element found at index {i}", end = " ")
+    else:
+        print("Element not found", end = " ")
+
+
+# main function to try
+
+arrArray = [1, 2, 3, 4, 5, 6, 34, 23, 45, 67, 89, 90]
+arrArraySize = len(arrArray)
+intTarget = 23
+
+optimized_linear_search(arrArray, intTarget)
