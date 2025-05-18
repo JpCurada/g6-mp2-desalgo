@@ -16,6 +16,7 @@ def brute_force_knapsack(items, capacity, number_of_items):
             best_value (int): The highest value that can be obtained within the knapsack's capacity.
             best_weight (int): The total weight of the selected combination.
             best_selection (int): An integer bitmask representing which items are selected (1 means selected).
+            
     """
    
     best_value = 0
