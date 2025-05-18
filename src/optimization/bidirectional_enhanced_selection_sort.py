@@ -85,14 +85,3 @@ def bidirectional_enhanced_selection_sort(intArray):
 
     return intArray
 
-print(bidirectional_enhanced_selection_sort([5, 2, 1, 6, 8, 4]))
-print(bidirectional_enhanced_selection_sort([34, 7, 23, 32, 5, 62, 14, 2, 87, 45]))
-print(bidirectional_enhanced_selection_sort([42, 16, 8, 23, 4, 15, 91, 67, 2, 33, 10, 58]))
-print(bidirectional_enhanced_selection_sort([84, 1, 77, 32, 10, 45, 99, 63, 18, 73, 5, 12, 40, 27, 69, 91, 34, 21, 56, 2, 88, 14, 39, 60, 31]))
-print(bidirectional_enhanced_selection_sort([3, 7, 2, 7, 9, 1, 3, 6, 5, 2, 8, 4, 9, 0, 6]))
-print(bidirectional_enhanced_selection_sort([7, 6, 2, -1, 2, -8, 10, -9]))
-
-
-
-
-
