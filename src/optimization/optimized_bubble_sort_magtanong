@@ -1,0 +1,88 @@
+"""
+Optimized Bubble Sort Algorithm (Cocktail Shaker Sort): 
+    A sorting algorithm that traverses through a given array in both 
+    directions alternatively which is also known as Cocktail Shaker Sort.
+
+Parameters:
+    listInput (list): The list to be sorted.
+    ascending (bool): Sort in ascending as default, otherwise sort in descending.
+    isNumbers (bool): Check if the list is of numbers or letters.
+
+Returns: 
+    The sorted list (listInput).
+
+References:
+    https://www.geeksforgeeks.org/cocktail-sort/
+    
+"""
+#fn_bubble_sort is a function that takes a list as a parameter
+def optimizedBubbleSort(listInput, ascending=True, isNumbers=True): 
+    #variable intSize is the length of the list
+    intSize = len(listInput) 
+
+    #variable start indicates the starting index of the list
+    intStart = 0 
+
+    #variable end indicates the last index of the list
+    intEnd = intSize - 1
+
+    #indicates whether a swap has occurred
+    swapped = True 
+
+    #check if the list is of numbers or letters
+    if not isNumbers:
+        for i in range(intSize):
+            #convert the elements to string
+            listInput[i] = str(listInput[i])
+
+    #iterate until no swaps occur
+    while swapped:
+
+        #set swapped to false
+        swapped = False
+
+        #loop through the list from start to end
+        for i in range(intStart, intEnd):
+
+            #compare adjacent elements from start to end
+            if listInput[i] > listInput[i + 1]:
+
+                #swap if they are not in the correct order
+                listInput[i], listInput[i + 1] = listInput[i + 1], listInput[i]
+
+                #set swapped to true
+                swapped = True
+        
+        #if no swaps occurred, break the loop
+        if not swapped:
+            break
+
+        #set swapped to false
+        swapped = False
+
+        #loop through the list from end to start
+        intEnd -= 1
+
+        #compare adjacent elements from end to start
+        for i in range(intEnd - 1, intStart - 1, -1):
+
+            #compare adjacent elements from end to start
+            if listInput[i] > listInput[i + 1]:
+
+                #swap if they are not in the correct order
+                listInput[i], listInput[i + 1] = listInput[i + 1], listInput[i]
+
+                #set swapped to true
+                swapped = True
+        
+        #if no swaps occurred, break the loop
+        intStart += 1
+    
+    #reverse the list if not in ascending order
+    if not ascending:
+        for i in range(intSize // 2):
+            # swap elements from the starting index and the ending index
+            listInput[i], listInput[intSize - 1 - i] = listInput[intSize - 1 - i], listInput[i]
+
+    #return the sorted list
+    return listInput
