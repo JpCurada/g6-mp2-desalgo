@@ -70,8 +70,25 @@ def get_min_node(priority):
     min_index = 0
     for i in range(1, len(priority)):
         if(priority[i].cost < priority[min_index].cost):
-            min_index = 1
+            min_index = i
     return priority.pop(min_index)
+
+def calculate_path_cost(path, cost_matrix):
+    """
+    Calculates the total cost of a given path based on the provided cost matrix.
+
+    Args:
+        path (list of int): The sequence of vertices representing the path.
+        cost_matrix (list of list of float): The cost matrix representing the graph.
+
+    Returns:
+        float: The total cost of traversing the given path.
+    """
+        
+    total = 0
+    for i in range(len(path) - 1):
+        total += cost_matrix[path[i]][path[i + 1]]
+    return total
 
 def branch_and_bound_tsp(cost_matrix):
     """
@@ -106,6 +123,7 @@ def branch_and_bound_tsp(cost_matrix):
             
             min_node.path.append(0)
             min_node.cost += cost_matrix[last][0]
+            
             if min_node.cost < min_cost:
                 min_cost = min_node.cost
                 best_path = min_node.path[:]
@@ -125,5 +143,7 @@ def branch_and_bound_tsp(cost_matrix):
                 child = Node(new_path, new_matrix, new_cost, i, min_node.level + 1)
                 priority.append(child)
 
-    return min_cost, best_path
+    if best_path:
+        min_cost = calculate_path_cost(best_path, cost_matrix)
 
+    return min_cost, best_path

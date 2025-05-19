@@ -1,4 +1,4 @@
-def bidirectional_enhanced_selection_sort(intArray):
+def bidirectional_enhanced_selection_sort(intArray, ascending):
     """
         This function use the advantage of applying the selection sort algorithm bidirectionally (from left to right & right to left in one iteration), swapping the previous maximum/minimum to the location before the new maximum/minimum, storing the new location of previous maximum/minimum to the stack, and once there's no new maximum/minimum, then the current maximum/minimum will be place to its correct position. To continue, the previous maximum/minimum in the stack will be use as the starting point for the next iteration and will repeat the process until the array is sorted. And Finally, the sorting will stop when there is no swapped performed and empty stack or the stack pop of both are equal, or the front search is greater than the end search and the end search is less than the front search.
     
@@ -7,9 +7,11 @@ def bidirectional_enhanced_selection_sort(intArray):
         
     Arguments:
         intArray (list): The list of integers to be sorted
+        ascending (boolean): The list is ascending if True
 
     Return:
         list: The sorted list in ascending order
+        list of lists: The order of array in each step
 
     Example:
         >>>bidirectional_enhanced_selection_sort([64, 34, 25, 12, 22, 11, 90])
@@ -33,15 +35,27 @@ def bidirectional_enhanced_selection_sort(intArray):
         #loop from left to right (sort the large value)
         for i in range(intCurrentMax, intEnd):
 
-            if(intArray[intCurrentMax] < intArray[i]):
-                booleanSwapped = True
-                intTemporaryContainer = intArray[intCurrentMax]
-                intArray[intCurrentMax] = intArray[i - 1]
-                intArray[i - 1] = intTemporaryContainer
+            if(ascending):
+                if(intArray[intCurrentMax] < intArray[i]):
+                    booleanSwapped = True
+                    intTemporaryContainer = intArray[intCurrentMax]
+                    intArray[intCurrentMax] = intArray[i - 1]
+                    intArray[i - 1] = intTemporaryContainer
 
-                stackMaxLocation.append(i - 1)
+                    stackMaxLocation.append(i - 1)
 
-                intCurrentMax = i
+                    intCurrentMax = i
+            else:
+                if(intArray[intCurrentMax] > intArray[i]):
+                    booleanSwapped = True
+                    intTemporaryContainer = intArray[intCurrentMax]
+                    intArray[intCurrentMax] = intArray[i - 1]
+                    intArray[i - 1] = intTemporaryContainer
+
+                    stackMaxLocation.append(i - 1)
+
+                    intCurrentMax = i
+
         
         intTemporaryContainer = intArray[intCurrentMax]
         intArray[intCurrentMax] = intArray[intEnd - 1]
@@ -51,16 +65,27 @@ def bidirectional_enhanced_selection_sort(intArray):
 
         #loop from right to left (sort the small value)
         for j in range(intCurrentMin, intFront - 1, -1):
+            if(ascending):
+                if(intArray[intCurrentMin] > intArray[j]):
+                    booleanSwapped = True
+                    intTemporaryContainer = intArray[intCurrentMin]
+                    intArray[intCurrentMin] = intArray[j + 1]
+                    intArray[j + 1] = intTemporaryContainer
 
-            if(intArray[intCurrentMin] > intArray[j]):
-                booleanSwapped = True
-                intTemporaryContainer = intArray[intCurrentMin]
-                intArray[intCurrentMin] = intArray[j + 1]
-                intArray[j + 1] = intTemporaryContainer
+                    stackMinLocation.append(j + 1)
 
-                stackMinLocation.append(j + 1)
+                    intCurrentMin = j
+            else:
+                if(intArray[intCurrentMin] < intArray[j]):
+                    booleanSwapped = True
+                    intTemporaryContainer = intArray[intCurrentMin]
+                    intArray[intCurrentMin] = intArray[j + 1]
+                    intArray[j + 1] = intTemporaryContainer
 
-                intCurrentMin = j
+                    stackMinLocation.append(j + 1)
+
+                    intCurrentMin = j
+
 
         intTemporaryContainer = intArray[intCurrentMin]
         intArray[intCurrentMin] = intArray[intFront]
@@ -69,7 +94,6 @@ def bidirectional_enhanced_selection_sort(intArray):
         intFront += 1
 
         steps.append(intArray[:])
-
 
         try:
             intCurrentMax = stackMaxLocation.pop()
@@ -88,3 +112,4 @@ def bidirectional_enhanced_selection_sort(intArray):
             continue
 
     return intArray, steps
+

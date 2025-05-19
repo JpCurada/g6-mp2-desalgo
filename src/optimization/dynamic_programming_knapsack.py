@@ -1,4 +1,4 @@
-def dynamic_programming_knapsack(weights, values, capacity):
+def dynamic_programming_knapsack(items, capacity):
     """
     This function solves the Knapsack Problem using a dynamic programming approach. It creates a 2d table where each cell represents the best value achievable using a subset of items within a given capacity. This then pick an item based on which option gives a higher value.
 
@@ -14,7 +14,12 @@ def dynamic_programming_knapsack(weights, values, capacity):
 
     """
 
-    length = len(weights)
+    #Variables
+    length = len(items)
+    weights = [item["weight"] for item in items]
+    values = [item["value"] for item in items]
+    all_valid_subset = []
+
 
     #2d table
     table = [[0] * (capacity + 1) for _ in range(length + 1)]
@@ -34,7 +39,13 @@ def dynamic_programming_knapsack(weights, values, capacity):
             selected_items.append(i - 1)
             w -= weights[i - 1]
 
+    #format data: (subset item name, total weight, total value)
     selected_items.reverse()
-    selected_items_details = [(values[i], weights[i]) for i in selected_items]
 
-    return table[length][capacity], selected_items_details
+    selected_item_name = [f"Item {i+1}" for i in selected_items]
+    value = table[length][capacity]
+    weight = capacity - w
+
+    all_valid_subset.extend([selected_item_name, f"Weight: {weight}", f"Value: {value}"])
+    
+    return selected_item_name, value, all_valid_subset
