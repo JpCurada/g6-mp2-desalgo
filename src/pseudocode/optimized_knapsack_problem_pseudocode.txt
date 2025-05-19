@@ -2,10 +2,11 @@
 
 I. Assigned Algorithm
 
-        A. Name of Algorithm:
+    A. Name of Algorithm:
+
         0/1 Knapsack Problem (Dynamic Programming + Backtracking)
 
-B. Pseudocode:
+    B. Pseudocode:
 
             1. Manually count number_of_items from items list.
 
@@ -37,12 +38,12 @@ B. Pseudocode:
 
 
 
-C. Brief Description:
+    C. Brief Description:
 
         The 0/1 Knapsack algorithm is used to select the most valuable subset of items that fit within a given weight capacity. 
         This implementation uses dynamic programming to calculate the maximum achievable value and backtracking to list all item combinations that achieve it.
 
-II. Python Implementation
+    II. Python Implementation
 
 def knapsack_brute_force(items, capacity):
     """
