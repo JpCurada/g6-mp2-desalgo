@@ -1,0 +1,252 @@
+I. Assigned Algorithm
+
+A. Name of Algorithm:
+Travelling Salesman Problem (Optimized)
+
+B. Pseudocode:
+FUNCTION fnTSPOptimized(distanceMatrix, startCity):
+    IF distanceMatrix is not a valid non-empty square matrix:
+        RAISE error
+
+    IF startCity is not a valid index:
+        RAISE error
+
+    cityCount ← number of cities
+    totalMasks ← 2 ^ cityCount
+
+    dpCost ← 2D list of size [totalMasks][cityCount] initialized to ∞
+    dpPrev ← 2D list of size [totalMasks][cityCount] initialized to None
+
+    dpCost[1 << startCity][startCity] ← 0
+
+    FOR each mask from 1 to totalMasks - 1:
+        IF mask does not include startCity:
+            CONTINUE
+
+        FOR each currentCity in 0 to cityCount - 1:
+            IF mask does not include currentCity:
+                CONTINUE
+
+            prevMask ← mask with currentCity bit turned off
+            IF prevMask is 0:
+                CONTINUE
+
+            FOR each prevCity in 0 to cityCount - 1:
+                IF prevCity is in prevMask AND prevCity ≠ currentCity:
+                    newCost ← dpCost[prevMask][prevCity] + distance from prevCity to currentCity
+
+                    IF newCost < dpCost[mask][currentCity]:
+                        dpCost[mask][currentCity] ← newCost
+                        dpPrev[mask][currentCity] ← prevCity
+
+    finalMask ← (1 << cityCount) - 1
+    minCost ← ∞
+    lastCity ← None
+
+    FOR each city in 0 to cityCount - 1:
+        IF city ≠ startCity:
+            totalCost ← dpCost[finalMask][city] + distance from city to startCity
+
+            IF totalCost < minCost:
+                minCost ← totalCost
+                lastCity ← city
+
+    IF lastCity is None:
+        RETURN ([startCity], 0)
+
+    path ← [startCity]
+    currentCity ← lastCity
+    currentMask ← finalMask
+
+    WHILE currentCity ≠ startCity:
+        INSERT currentCity at position 1 in path
+        tempCity ← dpPrev[currentMask][currentCity]
+        currentMask ← currentMask XOR (1 << currentCity)
+        currentCity ← tempCity
+
+    RETURN (path, minCost)
+
+C. Brief Description:
+The TSP Optimized Algorithm solves the Traveling Salesman Problem (TSP) using dynamic programming with bitmasking, known as the Held-Karp algorithm. This method improves upon the brute-force approach by reducing the time complexity from O(n!) to O(n²·2ⁿ), making it feasible for medium-sized inputs. It systematically builds up solutions for subsets of cities, storing intermediate results to avoid redundant computations.
+
+II. Python Implementation
+A. Function Code:
+def fnTSPOptimized(arrDistanceMatrix: list, intStartCity: int) -> tuple[list, int]:
+    """
+    Description:
+        Solves the Traveling Salesman Problem using dynamic programming with bit 
+        manipulation (Held-Karp algorithm). This optimized version has a time 
+        complexity of O(n²·2ⁿ) where n is the number of cities.
+
+    Parameters:
+        arrDistanceMatrix (list): Square matrix where element [i][j] represents 
+                                 the distance from city i to city j
+        intStartCity (int): Index of the starting city (0-indexed)
+
+    Returns:
+        tuple: A tuple containing:
+            - list: The optimal path as city indices (starting and ending with intStartCity)
+            - int: Total distance of the optimal path
+
+    References:
+        https://www.geeksforgeeks.org/travelling-salesman-problem-implementation-using-dynamic-programming/
+    """
+    if not arrDistanceMatrix or not isinstance(arrDistanceMatrix, list):
+        raise ValueError("arrDistanceMatrix must be a non-empty 2D list")
+
+    intCityCount: int = len(arrDistanceMatrix)
+    for arrRow in arrDistanceMatrix:
+        if not isinstance(arrRow, list) or len(arrRow) != intCityCount:
+            raise ValueError("arrDistanceMatrix must be a square matrix")
+
+    if not isinstance(intStartCity, int) or intStartCity < 0 or intStartCity >= intCityCount:
+        raise ValueError("intStartCity must be a valid index within the distance matrix")
+    
+    # Initialize DP arrays
+    intTotalMasks: int = 1 << intCityCount
+    arrDPCost: list = [[float('inf')] * intCityCount for _ in range(intTotalMasks)]
+    arrDPPrev: list = [[None] * intCityCount for _ in range(intTotalMasks)]
+    
+    # Base case: starting position
+    arrDPCost[1 << intStartCity][intStartCity] = 0
+    
+    # Fill DP table
+    for intMask in range(1, intTotalMasks):
+        if not (intMask & (1 << intStartCity)):
+            continue
+            
+        for intCurrentCity in range(intCityCount):
+            if not (intMask & (1 << intCurrentCity)):
+                continue
+                
+            intPrevMask: int = intMask ^ (1 << intCurrentCity)
+            if intPrevMask == 0:
+                continue
+                
+            for intPrevCity in range(intCityCount):
+                if not (intPrevMask & (1 << intPrevCity)) or intPrevCity == intCurrentCity:
+                    continue
+                    
+                intNewCost: int = arrDPCost[intPrevMask][intPrevCity] + arrDistanceMatrix[intPrevCity][intCurrentCity]
+                
+                if intNewCost < arrDPCost[intMask][intCurrentCity]:
+                    arrDPCost[intMask][intCurrentCity] = intNewCost
+                    arrDPPrev[intMask][intCurrentCity] = intPrevCity
+    
+    # Find optimal last city
+    intFinalMask: int = (1 << intCityCount) - 1
+    intMinCost: int = float('inf')
+    intLastCity: int = None
+    
+    for intCity in range(intCityCount):
+        if intCity == intStartCity:
+            continue
+            
+        intTotalCost: int = arrDPCost[intFinalMask][intCity] + arrDistanceMatrix[intCity][intStartCity]
+        if intTotalCost < intMinCost:
+            intMinCost = intTotalCost
+            intLastCity = intCity
+    
+    # Handle single city case
+    if intLastCity is None:
+        return [intStartCity], 0
+    
+    # Reconstruct path
+    arrPath: list = [intStartCity]
+    intCurrentCity: int = intLastCity
+    intCurrentMask: int = intFinalMask
+    
+    while intCurrentCity != intStartCity:
+        arrPath.insert(1, intCurrentCity)
+        intTempCity: int = arrDPPrev[intCurrentMask][intCurrentCity]
+        intCurrentMask ^= (1 << intCurrentCity)
+        intCurrentCity = intTempCity
+    
+    return arrPath, intMinCost
+
+III. Simulation / Step-by-Step Example
+A. Sample Input:
+distanceMatrix = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+startCity = 0
+
+This matrix defines the distances between 4 cities. For example, the distance from city 0 to city 1 is 10, and from city 2 to city 3 is 30.
+
+B. Step-by-Step Process:
+1. Initialize
+
+    - cityCount = 4
+    - totalMasks = 2⁴ = 16
+    - dpCost and dpPrev are initialized:
+        - dpCost[1 << 0][0] = 0 → i.e., dpCost[0001][0] = 0
+        - All other entries are set to ∞ or None
+
+2. Dynamic Programming Loop
+Iteratively build minimal costs to reach each subset of visited cities ending at a specific city
+    - For example:
+        - mask = 0011 (cities 0 and 1 visited)
+            - Consider transition from 0 → 1
+            - dpCost[0011][1] = dpCost[0001][0] + distance[0][1] = 0 + 10 = 10
+        - mask = 0111 (cities 0, 1, 2)
+            - Consider ending at city 2 from city 1:
+            - dpCost[0111][2] = dpCost[0011][1] + distance[1][2] = 10 + 35 = 45
+
+This continues until all possible combinations of visited cities are filled in the table
+
+3. Find Minimum Cost Tour
+    - finalMask = 1111 (all cities visited)
+    - For each city i ≠ startCity, compute:
+        - dpCost[1111][i] + distance[i][0]
+
+4. Reconstruct Path
+- Start from lastCity determined above
+- Walk backward using dpPrev to reconstruct the full path
+- Insert each city at position 1 in path, ending with startCity at both ends
+
+C. Final Output:
+bestPath = [0, 1, 3, 2, 0]
+minDistance = 80
+
+Note: This is the shortest round-trip path that visits all cities once and returns to the start.
+
+All subsets and transitions are optimized through memoization in dpCost, avoiding redundant calculations and making this solution significantly faster than brute-force for moderate-sized inputs (up to ~20 cities).
+
+IV. Discussion
+A. Implementation Logic:
+This algorithm uses dynamic programming with bitmasking (Held-Karp) to efficiently solve the TSP. Instead of exploring every possible permutation recursively, it builds up solutions incrementally by computing the shortest path to reach every subset of cities with a known ending point. The key innovation is using a bitmask to represent visited cities, enabling memoization of overlapping subproblems.
+
+Key decisions:
+    - DP Table (dpCost): Stores the minimum cost to reach a subset of cities ending at a specific city.
+    - Bitmasking: Efficiently tracks subsets using integer masks, e.g., 01101 means cities 0, 2, and 3 are visited.
+    - Backtracking (dpPrev): Enables full path reconstruction after computing the minimum cost.
+    - Start-City Optimization: Skips any state not containing the start city to reduce unnecessary computations.
+
+This design keeps the time and space complexity at O(n²·2ⁿ) and allows solutions for up to ~20 cities on modern machines.
+
+B. References:
+GeeksforGeeks. (2024, November 26). Travelling Salesman Problem using Dynamic Programming. GeeksforGeeks. https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming/
+
+Held & Karp (1962) – Bellman Dynamic Programming-based TSP formulation
+
+C. Possible Improvements / Future Work:
+Despite being much faster than brute-force, this approach has limitations:
+
+- Space Optimization:
+Use a rolling array for dpCost to reduce space from O(n·2ⁿ) to O(2·n·2ⁿ)
+
+- Parallelism:
+Parallelize independent subset evaluations to improve performance
+
+- Early Exit Strategies:
+Prune subtrees using lower-bound heuristics (like in branch-and-bound)
+
+- Graph Visualization:
+Add support to visualize tours using a plotting library for better interpretation
+
+- Path Caching:
+Cache frequent sub-paths for TSP instances with repeated structures (meta-heuristics)
+
