@@ -71,7 +71,7 @@ def knapsack_solver(items, knapsack_capacity, number_of_items):
     return knapsack_table[number_of_items][knapsack_capacity], selected_items_count, chosen_item_list
 
 
-# === Example usage ===
+# ==== Example usage ====
 
 items = [
     {"weight": 3, "value": 4},
