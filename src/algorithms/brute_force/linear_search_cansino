@@ -1,0 +1,53 @@
+def linear_search(arrArray, intTarget):
+
+    """
+    Description: This function performs a sequential search on the given array to find the target element to search for.
+   
+    Parameters:
+    arrArray (list): The array in which to search for the target element.
+    intTarget (int): The target element to search for.
+    arrArraySize (int): The size of the array.
+    
+    Returns:    
+    bool: True if the target element is found in the array, False otherwise.
+    """
+    
+    # Linear search proper !!
+
+    for i in range(len(arrArray)):
+        if arrArray[i] == intTarget:
+            return True
+    return False
+
+
+# To test the function (main function ??)
+
+print("Enter the number of elements in the array: ", end = " ")
+intArrSize = int(input())
+
+if intArrSize <= 0:
+    print("Invalid size of array!")
+    exit(0)
+
+arrArray = []
+for i in range(intArrSize):
+    print(f"Enter element {i + 1}:", end= " ")
+    arrArray.append(int(input()))
+
+if len(arrArray) == 0:
+    print("Array is empty!")
+    exit(0)
+
+print("Enter the target element to search for:", end = " ")
+intTarget = int(input())
+
+if intTarget < 0:
+    print("Invalid target element!")
+    exit(0)
+
+intResult = linear_search(arrArray, intTarget)
+
+if intResult != False:
+        print(f"Element found at index {intResult}", end = " ")
+else:
+        print("Element not found", end = " ")
