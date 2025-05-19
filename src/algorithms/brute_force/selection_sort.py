@@ -1,40 +1,46 @@
 import os
 
-def selection_sort(arr):
+def selection_sort(arr, ascending=True):
     """
-    Selection Sort using Brute Force approach.
-
-    Selection Sort is a simple and intuitive sorting algorithm that works by repeatedly selecting the minimum element from
-    the unsorted portion of the array and swapping it with the first element.
+    Selection Sort using Brute Force approach with step tracking.
 
     Args:
-        arr (list): A list of elements (either all numbers or all strings).
+        arr (list): A list of elements (all numbers or all strings).
+        ascending (bool): Sort order flag. True for ascending, False for descending.
 
     Returns:
-        list: A new list containing the sorted elements in ascending order.
+        tuple: (sorted_list, steps) where steps is a list of list states after each iteration.
     """
-    for i in range(len(arr)):
-        intMinIndex  = i
-        for j in range(i + 1, len(arr)):
-            a = arr[j].lower() if isinstance(arr[j], str) else arr[j]
-            b = arr[intMinIndex].lower() if isinstance(arr[intMinIndex], str) else arr[intMinIndex]
-            if a < b:
-                intMinIndex = j
-        if intMinIndex != i:
-            arr[i], arr[intMinIndex] = arr[intMinIndex], arr[i]
-    return arr
+    n = len(arr)
+    arr_copy = arr.copy()
+    steps = []
 
-def is_number(str):
-    if str == "":
+    for i in range(n):
+        intMinIndex = i
+        for j in range(i + 1, n):
+            a = arr_copy[j].lower() if isinstance(arr_copy[j], str) else arr_copy[j]
+            b = arr_copy[intMinIndex].lower() if isinstance(arr_copy[intMinIndex], str) else arr_copy[intMinIndex]
+
+            if (a < b and ascending) or (a > b and not ascending):
+                intMinIndex = j
+
+        arr_copy[i], arr_copy[intMinIndex] = arr_copy[intMinIndex], arr_copy[i]
+
+        steps.append(arr_copy.copy())
+
+    return arr_copy, steps
+
+def is_number(s):
+    if s == "":
         return False
     intDotCount = 0
     i = 0
-    if str[0] == '-':
-        if len(str) == 1:
+    if s[0] == '-':
+        if len(s) == 1:
             return False
         i = 1
-    while i < len(str):
-        c = str[i]
+    while i < len(s):
+        c = s[i]
         if c == '.':
             intDotCount += 1
             if intDotCount > 1:
@@ -44,10 +50,10 @@ def is_number(str):
         i += 1
     return True
 
-def is_valid_word(str):
-    if str == "":
+def is_valid_word(s):
+    if s == "":
         return False
-    return all(c.isalpha() for c in str)
+    return all(c.isalpha() for c in s)
 
 # ========== USER INPUT ==========
 try:
@@ -59,42 +65,24 @@ except ValueError:
     print("\nError: Invalid input. Please enter a valid integer.")
     exit(0)
 
-arrUserInput  = []
-arrInvalidElements  = []
+arrUserInput = []
+arrInvalidElements = []
 
 for i in range(intNumElements):
     strElement = input(f"Enter element #{i + 1}: ").strip()
-    
+
     if is_number(strElement):
+        # Convert to float or int accordingly
         if '.' in strElement:
-            intSign = -1 if strElement[0] == '-' else 1
-            arrParts = strElement.lstrip('-').split('.')
-            intPart = 0
-            dblDecPart = 0.0
-
-            for ch in arrParts[0]:
-                intPart  = intPart * 10 + (ord(ch) - ord('0'))
-
-            if len(arrParts) > 1:
-                divisor = 10.0
-                for ch in arrParts[1]:
-                    dblDecPart += (ord(ch) - ord('0')) / divisor
-                    dblDivisor *= 10
-
-            arrUserInput.append(intSign * (intPart + dblDecPart))
+            try:
+                arrUserInput.append(float(strElement))
+            except ValueError:
+                arrInvalidElements.append(strElement)
         else:
-            intNum = 0
-            intSign = 1
-            intStart = 0
-            if strElement[0] == '-':
-                intSign = -1
-                intStart = 1
-            intIdx = intStart
-            while intIdx < len(strElement):
-                intDigit = ord(strElement[intIdx]) - ord('0')
-                intNum = intNum * 10 + intDigit
-                intIdx += 1
-            arrUserInput.append(intSign * intNum)
+            try:
+                arrUserInput.append(int(strElement))
+            except ValueError:
+                arrInvalidElements.append(strElement)
     elif is_valid_word(strElement):
         arrUserInput.append(strElement)
     else:
@@ -113,7 +101,8 @@ if not arrUserInput:
 if len(arrUserInput) > 1:
     typeFirst = type(arrUserInput[0])
     for element in arrUserInput[1:]:
-        if type(element) != typeFirst and not (isinstance(element, (int, float)) and isinstance(typeFirst, (int, float))):
+        # Allow mixing ints and floats but not mixing numbers with strings
+        if type(element) != typeFirst and not (isinstance(element, (int, float)) and isinstance(arrUserInput[0], (int, float))):
             print("\nError: Mixed data types detected. Please enter either only numbers or only words.")
             exit(1)
 
@@ -123,21 +112,28 @@ os.system('cls' if os.name == 'nt' else 'clear')
 # ========== DISPLAY UNSORTED ==========
 print("Unsorted List:")
 print("[", end="")
-for i in range(len(arrUserInput)):
-    e = arrUserInput[i]
+for i, e in enumerate(arrUserInput):
     print(f"'{e}'" if isinstance(e, str) else e, end="")
     if i != len(arrUserInput) - 1:
         print(", ", end="")
 print("]")
 
 # ========== SORTING ==========
-arrSorted = selection_sort(arrUserInput.copy())
+arrSorted, steps = selection_sort(arrUserInput)
+
+# ========== PRINT STEPS ==========
+for i, step in enumerate(steps, start=1):
+    print(f"\nStep {i}: [", end="")
+    for k, e in enumerate(step):
+        print(f"'{e}'" if isinstance(e, str) else e, end="")
+        if k != len(step) - 1:
+            print(", ", end="")
+    print("]")
 
 # ========== DISPLAY SORTED ==========
 print("\nSorted List:")
 print("[", end="")
-for i in range(len(arrSorted)):
-    e = arrSorted[i]
+for i, e in enumerate(arrSorted):
     print(f"'{e}'" if isinstance(e, str) else e, end="")
     if i != len(arrSorted) - 1:
         print(", ", end="")
