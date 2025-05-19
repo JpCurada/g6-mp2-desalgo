@@ -1,81 +1,67 @@
-def knapsack_brute_force(items, max_capacity):
+def fnKnapsackBruteForce(arrItems: list, intMaxCapacity: int) -> tuple[list, int, list]:
     """
-    Solves the 0/1 Knapsack problem using brute force approach.
+    Description:
+        Solves the 0/1 Knapsack problem using brute force approach by generating
+        all possible combinations of items and finding the most valuable valid combination.
 
-    Args:
-        items: List of tuples (name, weight, value)
-        max_capacity: Maximum weight capacity of knapsack
+    Parameters:
+        arrItems (list): List of tuples (name: str, weight: int, value: int)
+        intMaxCapacity (int): Maximum weight capacity of knapsack
 
     Returns:
-        best_subset: List of selected item names
-        best_value: Total value of the best subset
-        all_valid_subsets: List of all valid subsets with their weights and values
+        tuple: A tuple containing:
+            - list: Names of items in the best combination
+            - int: Total value of the best combination
+            - list: All valid combinations with their weights and values as (items, weight, value)
+
+    References:
+        https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
     """
-    number_of_items = len(items)
-    best_value = 0
-    best_subset = []
-    all_valid_subsets = []
+    intItemCount: int = len(arrItems)
+    intBestValue: int = 0
+    arrBestSubset: list = []
+    arrValidSubsets: list = []
 
-    # Include the empty subset
-    all_valid_subsets.append(([], 0, 0))
+    # Include empty subset
+    arrValidSubsets.append(([], 0, 0))
 
-    subset_index = 1
-    while subset_index < 2 ** number_of_items:
-        current_subset = []
-        current_total_weight = 0
-        current_total_value = 0
-        item_index = 0
+    intSubsetIndex: int = 1
+    while intSubsetIndex < 2 ** intItemCount:
+        arrCurrentSubset: list = []
+        intCurrentWeight: int = 0
+        intCurrentValue: int = 0
+        intItemIndex: int = 0
 
-        while item_index < number_of_items:
-            if subset_index & (1 << item_index):
-                item_name, item_weight, item_value = items[item_index]
-                current_subset.append(item_name)
-                current_total_weight += item_weight
-                current_total_value += item_value
-            item_index += 1
+        while intItemIndex < intItemCount:
+            if intSubsetIndex & (1 << intItemIndex):
+                strItemName, intItemWeight, intItemValue = arrItems[intItemIndex]
+                arrCurrentSubset.append(strItemName)
+                intCurrentWeight += intItemWeight
+                intCurrentValue += intItemValue
+            intItemIndex += 1
 
-        if current_total_weight <= max_capacity:
-            all_valid_subsets.append((current_subset, current_total_weight, current_total_value))
+        if intCurrentWeight <= intMaxCapacity:
+            arrValidSubsets.append((arrCurrentSubset, intCurrentWeight, intCurrentValue))
 
-            if current_total_value > best_value:
-                best_value = current_total_value
-                best_subset = current_subset
+            if intCurrentValue > intBestValue:
+                intBestValue = intCurrentValue
+                arrBestSubset = arrCurrentSubset
 
-        subset_index += 1
+        intSubsetIndex += 1
 
-    # Manual bubble sort by length of subset, then by value (ascending)
-    outer = 0
-    while outer < len(all_valid_subsets):
-        inner = 0
-        while inner < len(all_valid_subsets) - outer - 1:
-            subset_a, weight_a, value_a = all_valid_subsets[inner]
-            subset_b, weight_b, value_b = all_valid_subsets[inner + 1]
+    # Sort valid subsets by length and value
+    intOuter: int = 0
+    while intOuter < len(arrValidSubsets):
+        intInner: int = 0
+        while intInner < len(arrValidSubsets) - intOuter - 1:
+            arrSubsetA, intWeightA, intValueA = arrValidSubsets[intInner]
+            arrSubsetB, intWeightB, intValueB = arrValidSubsets[intInner + 1]
 
-            if len(subset_a) > len(subset_b) or (
-                len(subset_a) == len(subset_b) and value_a > value_b):
-                # Swap the entries
-                all_valid_subsets[inner], all_valid_subsets[inner + 1] = all_valid_subsets[inner + 1], all_valid_subsets[inner]
+            if len(arrSubsetA) > len(arrSubsetB) or (
+                len(arrSubsetA) == len(arrSubsetB) and intValueA > intValueB):
+                arrValidSubsets[intInner], arrValidSubsets[intInner + 1] = arrValidSubsets[intInner + 1], arrValidSubsets[intInner]
 
-            inner += 1
-        outer += 1
+            intInner += 1
+        intOuter += 1
 
-    return best_subset, best_value, all_valid_subsets
-
-
-# Example usage
-items = [
-    ("Item 1", 3, 4),
-    ("Item 2", 4, 5),
-    ("Item 3", 2, 6),
-]
-
-capacity = 7
-
-best_subset, best_value, all_valid_subsets = knapsack_brute_force(items, capacity)
-
-print(f"\nKnapsack Capacity: {capacity}")
-print(f"Best subset of items chosen: {best_subset}")
-print(f"Best total value: {best_value}")
-print("\nAll valid subsets: (subset item nme, total weight, total value):")
-for subset_names, total_weight, total_value in all_valid_subsets:
-    print(f"  {subset_names}, Weight: {total_weight}, Value: {total_value}")
+    return arrBestSubset, intBestValue, arrValidSubsets
