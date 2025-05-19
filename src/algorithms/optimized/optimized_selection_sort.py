@@ -1,8 +1,9 @@
-def fnSelectionSort(arrInput: list, boolAscending: bool = True) -> tuple[list, list]:
+def fnSelectionSortOptimized(arrInput: list, boolAscending: bool = True) -> tuple[list, list]:
     """
     Description:
-        Selection Sort algorithm that finds the minimum/maximum element 
-        in the unsorted portion and places it at the beginning.
+        Optimized Selection Sort that reduces the number of swaps by only 
+        performing a swap when a new minimum/maximum element is found in 
+        the unsorted portion.
 
     Parameters:
         arrInput (list): The array to be sorted, can contain numbers or strings
@@ -22,17 +23,17 @@ def fnSelectionSort(arrInput: list, boolAscending: bool = True) -> tuple[list, l
 
     for i in range(intSize):
         intMinIndex: int = i
-        for j in range(i + 1, intSize):
-            varCurrent = arrResult[j].lower() if isinstance(arrResult[j], str) else arrResult[j]
-            varMin = arrResult[intMinIndex].lower() if isinstance(arrResult[intMinIndex], str) else arrResult[intMinIndex]
+        varCurrent = arrResult[intMinIndex].lower() if isinstance(arrResult[intMinIndex], str) else arrResult[intMinIndex]
 
-            if (varCurrent < varMin and boolAscending) or (varCurrent > varMin and not boolAscending):
+        for j in range(i + 1, intSize):
+            varComp = arrResult[j].lower() if isinstance(arrResult[j], str) else arrResult[j]
+
+            if (varComp < varCurrent and boolAscending) or (varComp > varCurrent and not boolAscending):
                 intMinIndex = j
+                varCurrent = varComp
 
         if intMinIndex != i:
             arrResult[i], arrResult[intMinIndex] = arrResult[intMinIndex], arrResult[i]
             arrSteps.append(arrResult.copy())
 
     return arrResult, arrSteps
-
-
