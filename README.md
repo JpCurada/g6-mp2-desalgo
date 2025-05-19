@@ -17,6 +17,7 @@ Review and Implementation of Brute Force Algorithms
 - RACELIS, Michael Richmond V.
 - CANSINO, Florence Lee F.
 - RAMILO, Gian G.
+- MAGTANONG, Gabriel Andre E.
 
 ## Environment Setup
 
@@ -40,12 +41,14 @@ We'll use UV as our package manager:
    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
 
-### Getting Started
+### Contributing
 Clone the repository:
 ```
 git clone https://github.com/JpCurada/g6-mp2-desalgo.git
 git checkout dev
-```
+
+
+
 
 
 
