@@ -20,6 +20,7 @@ def comb_sort(intArr):
     #variables
     intLength = len(intArr)
     intGap = int(len(intArr) / 1.3)
+    steps = []
 
     #loop through array
     while intGap > 0:
@@ -30,5 +31,6 @@ def comb_sort(intArr):
                 intArr[i + intGap] = intTemporaryContainer
 
         intGap = int(intGap/1.3)
+        steps.append(intArr[:])
     
-    return intArr
+    return intArr, steps

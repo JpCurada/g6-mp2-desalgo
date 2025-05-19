@@ -24,6 +24,7 @@ def bidirectional_enhanced_selection_sort(intArray):
     intMaxBegin = 0
     intCurrentMax = 0
     intCurrentMin = intEnd - 2
+    steps = []
 
     #loop through the array
     while intFront<intEnd and intEnd>intFront:
@@ -67,6 +68,9 @@ def bidirectional_enhanced_selection_sort(intArray):
 
         intFront += 1
 
+        steps.append(intArray[:])
+
+
         try:
             intCurrentMax = stackMaxLocation.pop()
             intCurrentMin = stackMinLocation.pop()
@@ -83,5 +87,4 @@ def bidirectional_enhanced_selection_sort(intArray):
             intCurrentMin = intEnd
             continue
 
-    return intArray
-
+    return intArray, steps
