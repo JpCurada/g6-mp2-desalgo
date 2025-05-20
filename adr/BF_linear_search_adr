@@ -1,0 +1,94 @@
+# Algorithm Activity Documentation Report
+
+---
+
+## I. Assigned Algorithm
+
+**A. Sequential/Linear Search**  
+
+**B. Pseudocode:**  
+```plaintext
+
+Start
+
+- Accept the array (arrInput) and the element (varTarget) to search for.
+- Initialize variable i to 0.
+
+- While i is less than the length of the array:
+    - If the value of the element at index [i] is equal to the target element,
+        - Returns the index;
+        - Then end the process.
+    - Else, increment i by 1.
+
+- If the loop reaches the end of the array without finding the target element, return -1.
+
+End
+
+```
+
+**C. Brief Description:**  
+
+Sequential or Linear Search is the most basic searching algorithm and is most efficient in small, unsorted arrays. It iterates every element in an array one by one until it finds the target value or reaches the last index of the array. Since it does not require the array to be sorted, linear search is simple to implement but might be inefficient to larger data sets due to its O(n) time complexity.
+
+---
+
+## II. Python Implementation
+
+**Function Code:**  
+
+``` python
+def fnLinearSearch(arrInput: list, varTarget: any) -> int:
+    """
+    Description:
+        Performs a sequential search through the array to find the target element.
+        Returns the index of the first occurrence of the target if found.
+
+    Parameters:
+        arrInput (list): The array to search in, can contain any comparable type
+        varTarget (any): The target element to search for
+
+    Returns:
+        int: Index of the first occurrence of varTarget if found, -1 otherwise
+
+    """
+    for intIndex in range(len(arrInput)):
+        if arrInput[intIndex] == varTarget:
+            return intIndex
+    return -1
+
+```
+---
+
+## III. Simulation / Step-by-Step Example
+
+**A. Sample Input:**  
+
+arrInput [6, 3, 4, 9, 7], varTarget = 4
+
+**B. Step-by-Step Process:**  
+
+1. Start with the first element (index 0), then checks if it is equal to varTarget (6 != 4)
+2. Move to the next element (index 1), then checks if it is equal to varTarget (3 != 4)
+3. Move to the next element (index 2), then checks if it is equal to varTarget (4 == 4)
+4. Since it is found, return the index 2.
+
+**C. Final Output:**  
+
+Output: 2
+
+---
+
+## IV. Discussion
+
+**A. Implementation Logic:**  
+
+The function uses a simple for loop to iterate every element in the array and compare it to the target value. If the current element matches the target value, the function immediately returns the index of that element. If the loop completes and iterated through each element without finding the target element, the function will return -1. With that, the loop will not have unnecessary iterations and indicate it to stop.
+
+
+**B. References:**
+
+[GeeksforGeeks. "Linear Search Algorithm"](https://www.geeksforgeeks.org/linear-search/). *GeeksforGeeks*, 2025.
+
+**C. Possible Improvements / Future Work:**
+
+One potential improvement would be to modify the function to return all occurrences of the target value within the array instead of stopping at the first match. Additionally, allowing case-sensitive search for string values could improve its flexibility in handling written or text data. Lastly, it could be improved by better handling edge cases, such as if there's empty lists or invalid inputs.
