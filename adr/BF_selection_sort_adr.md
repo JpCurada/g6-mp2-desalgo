@@ -111,7 +111,6 @@ Initial array: ["banana", "apple", "cherry", "date"]
 **C. Final Output:** 
 
 Sorted array: ["apple", "banana", "cherry", "date"]
----
 
 ## IV. Discussion
 
