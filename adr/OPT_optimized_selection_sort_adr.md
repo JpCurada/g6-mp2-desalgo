@@ -81,10 +81,11 @@ def optimizedSelectionSort(listInput, ascending=True):
 ## III. Simulation / Step-by-Step Example
 
 **A. Sample Input:**  
-*[5, 3, 8, 6, 2]*
+[5, 3, 8, 6, 2]
 
 **B. Step-by-Step Process:**  
-*We perform searches that increase the frequency of accessed elements and reorder the list accordingly.*
+
+We perform searches that increase the frequency of accessed elements and reorder the list accordingly.
 
 1. Pass 1 (i = 0):
         *Find the minimum from index 0 to 4: min = 2 at index 4*
