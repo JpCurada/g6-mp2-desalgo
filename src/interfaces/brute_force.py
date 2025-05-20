@@ -1,5 +1,12 @@
 import streamlit as st
-import random
+from utils.components import sorting_form, item_adder, knapsack_form, tsp_form, sequential_search_form
+from algorithms.brute_force_test import bubble_sort, selection_sort, knapsack_brute_force
+
+def sequential_search(arr, target):
+    for idx, val in enumerate(arr):
+        if val == target:
+            return idx
+    return None
 
 def brute_force_page():
     st.title("Brute Force Algorithms")
@@ -13,32 +20,19 @@ def brute_force_page():
     ])
 
     with bubble_tab:
-        st.write("This is the bubble sort page.")
-        list_generator = st.radio("Select an option", ["Generate Random Values", "Enter Values Manually"])
-
-        list_values = []
-
-        if list_generator == "Generate Random Values":
-            list_length = st.number_input("Enter the length of the list", min_value=1, step=1, format="%d")
-            if list_length:
-                # Generate random integers between -100 and 100
-                list_values = [random.randint(-100, 100) for _ in range(int(list_length))]
-        elif list_generator == "Enter Values Manually":
-            input_str = st.text_input("Enter the values separated by commas")
-            if input_str:
-                try:
-                    list_values = [int(num.strip()) for num in input_str.split(",") if num.strip()]
-                except ValueError:
-                    st.error("Please enter only integers separated by commas.")
-
-        st.write(list_values)
+        sorting_form(key="bubble_sort", sorting_function=bubble_sort)
 
     with select_tab:
-        st.write("This is the selection sort page.")
+        sorting_form(key="selection_sort", sorting_function=selection_sort)
+
     with search_tab:
-        st.write("This is the sequential search page.")
+        sequential_search_form(key="sequential_search", search_function=sequential_search)
+
     with knap_tab:
-        st.write("This is the knapsack problem page.")
+        knapsack_form(key="knapsack", knapsack_function=knapsack_brute_force)
+
     with tsp_tab:
-        st.write("This is the travelling salesman problem page.")
+        tsp_form(key="tsp")
+
+                        
 

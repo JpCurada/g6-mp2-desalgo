@@ -1,0 +1,253 @@
+I. Assigned Algorithm
+
+A. Name of Algorithm:
+Travelling Salesman Problem (Brute Force)
+
+B. Pseudocode:
+Main Function:
+FUNCTION fnTSPBruteForce(distanceMatrix, startCity = 0):
+    IF distanceMatrix is not a non-empty square matrix:
+        RAISE error
+
+    IF startCity is not a valid index:
+        RAISE error
+
+    cityCount ← number of cities in distanceMatrix
+    visited ← list of False with length cityCount
+    visited[startCity] ← True
+    allPaths ← empty list
+
+    CALL fnTSPHelper(
+        visited,
+        currentCity = startCity,
+        cityCount,
+        currentDistance = 0,
+        distanceMatrix,
+        path = [startCity],
+        allPaths,
+        startCity
+    ) RETURNING bestPath, minDistance
+
+    RETURN (bestPath, minDistance, allPaths)
+
+Recursive Helper Function:
+FUNCTION fnTSPHelper(visited, currentCity, cityCount, currentDistance,
+                     distanceMatrix, path, allPaths, startCity):
+
+    IF all cities in visited are True:
+        finalPath ← path + [startCity]
+        finalDistance ← currentDistance + distance from currentCity to startCity
+        APPEND (finalPath, finalDistance) to allPaths
+        RETURN (finalPath, finalDistance)
+
+    minDistance ← infinity
+    bestPath ← empty list
+
+    FOR each city i from 0 to cityCount - 1:
+        IF visited[i] is False:
+            visited[i] ← True
+
+            CALL fnTSPHelper(
+                visited,
+                currentCity = i,
+                cityCount,
+                currentDistance + distance from currentCity to i,
+                distanceMatrix,
+                path + [i],
+                allPaths,
+                startCity
+            ) RETURNING newPath, newDistance
+
+            IF newDistance < minDistance:
+                minDistance ← newDistance
+                bestPath ← newPath
+
+            visited[i] ← False
+
+    RETURN (bestPath, minDistance)
+
+C. Brief Description:
+The Traveling Salesman Problem (TSP) Brute Force algorithm finds the shortest possible route that visits each city exactly once and returns to the starting city. It does this by recursively exploring all permutations of city visits, calculating the total distance for each path, and selecting the one with the minimum total cost. This approach guarantees an optimal solution but is computationally expensive for large numbers of cities due to its factorial time complexity.
+
+II. Python Implementation
+A. Function Code:
+def fnTSPBruteForce(arrDistanceMatrix: list, intStartCity: int = 0) -> tuple[list, int, list]:
+    """
+    Description:
+        Solves the Traveling Salesman Problem using a recursive brute force approach
+        to find the shortest possible route that visits each city exactly once and
+        returns to the starting city.
+
+    Parameters:
+        arrDistanceMatrix (list): Square matrix where element [i][j] represents 
+                                 the distance from city i to city j
+        intStartCity (int, optional): Index of the starting city (0-indexed). Defaults to 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - list: The optimal path as city indices (starting and ending with intStartCity)
+            - int: Total distance of the optimal path
+            - list: List of tuples (path, distance) for all valid paths
+
+    References:
+        https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/
+    """
+    def fnTSPHelper(arrVisited: list, intCurrentCity: int, intCityCount: int, 
+                   intCurrentDist: int, arrDistanceMatrix: list, 
+                   arrPath: list, arrAllPaths: list, intStartCity: int) -> tuple[list, int]:
+        """
+        Description:
+            Recursive helper function to solve the TSP by exploring all possible paths.
+
+        Parameters:
+            arrVisited (list): Boolean array where arrVisited[i] is True if city i is visited
+            intCurrentCity (int): Current city being visited
+            intCityCount (int): Total number of cities
+            intCurrentDist (int): Cumulative distance of the path so far
+            arrDistanceMatrix (list): Distance matrix between cities
+            arrPath (list): Path traversed so far
+            arrAllPaths (list): List to store all valid paths and their distances
+            intStartCity (int): Starting city index
+
+        Returns:
+            tuple: A tuple containing:
+                - list: Best path found from current state
+                - int: Total distance of that path
+        """
+        if all(arrVisited):
+            final_path = arrPath + [intStartCity]
+            final_dist = intCurrentDist + arrDistanceMatrix[intCurrentCity][intStartCity]
+            arrAllPaths.append((final_path, final_dist))
+            return final_path, final_dist
+        
+        intMinDist: int = float('inf')
+        arrBestPath: list = []
+        
+        for intNextCity in range(intCityCount):
+            if not arrVisited[intNextCity]:
+                arrVisited[intNextCity] = True
+                arrNewPath, intNewDist = fnTSPHelper(
+                    arrVisited,
+                    intNextCity,
+                    intCityCount,
+                    intCurrentDist + arrDistanceMatrix[intCurrentCity][intNextCity],
+                    arrDistanceMatrix,
+                    arrPath + [intNextCity],
+                    arrAllPaths,
+                    intStartCity
+                )
+                if intNewDist < intMinDist:
+                    intMinDist = intNewDist
+                    arrBestPath = arrNewPath
+                arrVisited[intNextCity] = False
+                
+        return arrBestPath, intMinDist
+
+    if not arrDistanceMatrix or not isinstance(arrDistanceMatrix, list):
+        raise ValueError("arrDistanceMatrix must be a non-empty 2D list")
+
+    intCityCount: int = len(arrDistanceMatrix)
+    for arrRow in arrDistanceMatrix:
+        if not isinstance(arrRow, list) or len(arrRow) != intCityCount:
+            raise ValueError("arrDistanceMatrix must be a square matrix")
+
+    if not isinstance(intStartCity, int) or intStartCity < 0 or intStartCity >= intCityCount:
+        raise ValueError("intStartCity must be a valid index within the distance matrix")
+
+    arrAllPaths: list = []
+    arrVisited: list = [False] * intCityCount
+    arrVisited[intStartCity] = True
+    
+    arrBestPath, intMinDist = fnTSPHelper(
+        [True if i == intStartCity else False for i in range(intCityCount)],
+        intStartCity,
+        intCityCount,
+        0,
+        arrDistanceMatrix,
+        [intStartCity],
+        arrAllPaths,
+        intStartCity
+    )
+    
+    return arrBestPath, intMinDist, arrAllPaths
+
+III. Simulation / Step-by-Step Example
+A. Sample Input:
+distanceMatrix = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+startCity = 0
+
+This matrix defines the distances between 4 cities. For example, the distance from city 0 to city 1 is 10, and from city 2 to city 3 is 30.
+
+B. Step-by-Step Process:
+1. Initialize
+
+    - Number of cities: 4
+    - Starting city: 0
+    - visited = [True, False, False, False]
+    - path = [0]
+    - allPaths = []
+
+2. Recursive Exploration Begins
+Starting from city 0, recursively explore all permutations of the remaining cities (1, 2, 3):
+
+    - Try 0 → 1 → 2 → 3 → 0 → total distance = 10 + 35 + 30 + 20 = 95
+    - Try 0 → 1 → 3 → 2 → 0 → 10 + 25 + 30 + 15 = 80
+    - Try 0 → 2 → 1 → 3 → 0 → 15 + 35 + 25 + 20 = 95
+    - Try 0 → 2 → 3 → 1 → 0 → 15 + 30 + 25 + 10 = 80
+    - Try 0 → 3 → 1 → 2 → 0 → 20 + 25 + 35 + 15 = 95
+    - Try 0 → 3 → 2 → 1 → 0 → 20 + 30 + 35 + 10 = 95
+
+3. Track Minimum Path
+Among all 6 possible permutations, the algorithm identifies two paths with the lowest cost:
+
+[0, 1, 3, 2, 0] → 80
+
+[0, 2, 3, 1, 0] → 80
+
+4. Save All Paths
+Each valid complete path and its total distance is stored in allPaths.
+
+C. Final Output:
+bestPath = [0, 1, 3, 2, 0]
+minDistance = 80
+
+Note: If there are multiple optimal paths with the same minimum cost, this implementation returns the first one it finds.
+
+IV. Discussion
+A. Implementation Logic:
+The algorithm was implemented using recursive backtracking to exhaustively generate all permutations of cities, ensuring that each city is visited exactly once before returning to the start. This brute-force method guarantees an optimal solution by evaluating every possible tour.
+
+Key decisions:
+    - Recursive design: A helper function (fnTSPHelper) was used to build paths step-by-step, reducing state management complexity.
+    - Path tracking: Intermediate paths and distances are accumulated and stored in allPaths to support full visibility into all possibilities — useful for analysis and validation.
+    - Validation checks: Defensive programming techniques ensure robustness (e.g., validating that the matrix is square, the start city is valid).
+    - Backtracking: Cities are marked visited during recursion and unmarked after, allowing other permutations to reuse them.
+
+This structure separates the concerns of path generation, path evaluation, and final selection, making the logic modular and easier to maintain or extend.
+
+B. References:
+GeeksforGeeks. (2024, November 26). Traveling Salesman Problem (TSP) implementation. GeeksforGeeks. https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/
+
+C. Possible Improvements / Future Work:
+While the brute-force method guarantees correctness, it does not scale well due to its O(n!) time complexity, which becomes impractical for inputs larger than ~10 cities. Potential future enhancements include:
+
+- Memoization / Dynamic Programming:
+Implement Held-Karp algorithm to reduce time complexity to O(n²·2ⁿ)
+
+- Heuristics or Approximation:
+Use Greedy, Nearest Neighbor, or Genetic Algorithms for faster results on large graphs
+
+- Parallelization:
+Distribute permutations across threads/cores to speed up evaluation
+
+- Visualization:
+Add plotting (e.g., with matplotlib) to show tours spatially, helpful for geographic TSP instances
+
+- User Configuration:
+Allow weighted constraints, asymmetric distances, or exclusion of certain cities
+
