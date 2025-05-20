@@ -233,13 +233,13 @@ def knapsack_form(key, knapsack_function):
                     subset_text = "∅" if not subset else ", ".join(subset)
                     row_col1, row_col2, row_col3 = st.columns(3)
                     is_optimal = subset == best_subset
-                    background_color = "rgba(255, 200, 210, 0.3)" if is_optimal else "white"
+                    background_color = "rgba(124, 58, 237, 0.2)" if is_optimal else "var(--secondary-bg)"
                     with row_col1:
-                        st.markdown(f'<div style="background-color: {background_color}; padding: 8px;">{subset_text}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background-color: {background_color}; padding: 8px; color: var(--text-color);">{subset_text}</div>', unsafe_allow_html=True)
                     with row_col2:
-                        st.markdown(f'<div style="background-color: {background_color}; padding: 8px;">{weight}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background-color: {background_color}; padding: 8px; color: var(--text-color);">{weight}</div>', unsafe_allow_html=True)
                     with row_col3:
-                        st.markdown(f'<div style="background-color: {background_color}; padding: 8px;">{value}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background-color: {background_color}; padding: 8px; color: var(--text-color);">{value}</div>', unsafe_allow_html=True)
             # Display the solution message
             if best_subset:
                 with st.container(border=True):
@@ -321,15 +321,18 @@ def tsp_form(key, tsp_function):
                             with st.expander("View All Paths"):
                                 for path, distance in all_paths:
                                     is_optimal = distance == min_distance
-                                    background_color = "rgba(255, 200, 210, 0.3)" if is_optimal else "white"
+                                    background_color = "rgba(124, 58, 237, 0.2)" if is_optimal else "var(--secondary-bg)"
                                     st.markdown(
-                                        f'<div style="background-color: {background_color}; padding: 8px;">'
+                                        f'<div style="background-color: {background_color}; padding: 8px; color: var(--text-color);">'
                                         f'Path: {path} | Distance: {distance}'
                                         f'</div>',
                                         unsafe_allow_html=True
                                     )
 
 def sequential_search_form(key, search_function):
+    # Check if this is the self-organizing list function
+    is_self_organizing = search_function.__name__ == "fnSelfOrganizingSearch"
+    
     col1, col2 = st.columns([1, 3])
     with col1:
         list_generator = st.radio(
@@ -393,13 +396,33 @@ def sequential_search_form(key, search_function):
                 else:
                     st.error("Please enter some values or choose 'Generate Random Values'")
                     return
+            
+            # Reset the search history when generating a new list
             st.session_state[f"{key}_list_values"] = list_values
+            if is_self_organizing:
+                # Clear any previous access counts when a new list is generated
+                list_id = id(list_values)
+                session_key = f"sol_counts_{list_id}"
+                if session_key in st.session_state:
+                    del st.session_state[session_key]
+                st.session_state[f"{key}_search_history"] = []
 
         # Show the generated list if present
         list_values = st.session_state.get(f"{key}_list_values", [])
         if list_values:
             st.write("List:")
             st.write(list_values)
+            
+            # For self-organizing list, show search history
+            if is_self_organizing and f"{key}_search_history" in st.session_state:
+                search_history = st.session_state[f"{key}_search_history"]
+                if search_history:
+                    with st.expander("Search History", expanded=False):
+                        for i, (target, result, before_list, after_list) in enumerate(search_history):
+                            st.write(f"Search #{i+1}: Value '{target}'")
+                            st.write(f"Before: {before_list}")
+                            st.write(f"After: {after_list}")
+                            st.write("---")
 
         # Target input and search button (only if list is present)
         if list_values:
@@ -421,11 +444,43 @@ def sequential_search_form(key, search_function):
                             return
                     else:
                         target = search_target.strip()
+                    
+                    # Create a copy of the list to check if it changes
+                    list_copy = list_values.copy()
+                    
+                    # Perform the search
                     result = search_function(list_values, target)
-                    if result is not None:
-                        st.success(f"Value '{target}' found at index {result}.")
+                    
+                    # Check if the list was reorganized (self-organizing list)
+                    if list_copy != list_values:
+                        # Update the session state with the modified list
+                        st.session_state[f"{key}_list_values"] = list_values
+                        
+                        # Update search history for self-organizing list
+                        if is_self_organizing:
+                            if f"{key}_search_history" not in st.session_state:
+                                st.session_state[f"{key}_search_history"] = []
+                            st.session_state[f"{key}_search_history"].append((target, result, list_copy, list_values))
+                        
+                        # Show the updated list
+                        st.write("Updated list:")
+                        st.write(list_values)
+                        
+                        # After reorganizing, show where the target element is now
+                        if result is not None:
+                            st.success(f"Value '{target}' found. After reorganizing, it's now at index {result}.")
+                            # Display the before and after position
+                            orig_pos = list_copy.index(target) if target in list_copy else -1
+                            if orig_pos != -1 and orig_pos != result:
+                                st.info(f"Element was moved from index {orig_pos} to index {result} based on access frequency.")
+                        else:
+                            st.warning(f"Value '{target}' not found in the list.")
                     else:
-                        st.warning(f"Value '{target}' not found in the list.")
+                        # Regular search result for non-self-organizing search
+                        if result is not None:
+                            st.success(f"Value '{target}' found at index {result}.")
+                        else:
+                            st.warning(f"Value '{target}' not found in the list.")
         else:
             st.info("Generate a list first before searching.")
 
