@@ -249,14 +249,24 @@ def knapsack_form(key, knapsack_function):
                     with a total value of **{best_value}** and weight of **{total_weight}**.
                     """)
 
-def tsp_form(key):
+def tsp_form(key, tsp_function):
     input_col, output_col = st.columns([2, 3])
     with input_col:
         num_cities = st.number_input("Enter the number of cities", min_value=3, step=1, key=f"{key}_num_cities")
         if num_cities:
-            # Initialize distances matrix in session state if not present or if num_cities changed
+            # Add starting city selector
+            start_city = st.number_input(
+                "Select starting city (0-indexed)",
+                min_value=0,
+                max_value=int(num_cities)-1,
+                value=0,
+                step=1,
+                key=f"{key}_start_city"
+            )
+            
+            # Initialize distances matrix with infinity instead of 0
             if f"{key}_distances" not in st.session_state or len(st.session_state[f"{key}_distances"]) != num_cities:
-                st.session_state[f"{key}_distances"] = [[0 if i == j else None for j in range(int(num_cities))] for i in range(int(num_cities))]
+                st.session_state[f"{key}_distances"] = [[float('inf') if i != j else 0 for j in range(int(num_cities))] for i in range(int(num_cities))]
 
             with st.form(key=f"{key}_distance_form"):
                 st.write("Enter the distances between each unique pair of cities:")
@@ -268,15 +278,16 @@ def tsp_form(key):
                     for col_idx in range(max_cols):
                         if col_idx < len(row_pairs):
                             i, j = row_pairs[col_idx]
-                            val = st.session_state[f"{key}_distances"][i][j] if st.session_state[f"{key}_distances"][i][j] is not None else 1
+                            # Use 1 as default value for distances
+                            val = st.session_state[f"{key}_distances"][i][j] if st.session_state[f"{key}_distances"][i][j] != float('inf') else 1
                             new_val = cols[col_idx].number_input(
-                                f"City {i+1} → City {j+1}",
+                                f"City {i} → City {j}",
                                 min_value=1,
                                 step=1,
                                 value=val,
                                 key=f"{key}_{i}_{j}",
                                 label_visibility="visible",
-                                placeholder="0"
+                                placeholder="Distance"
                             )
                             st.session_state[f"{key}_distances"][i][j] = new_val
                             st.session_state[f"{key}_distances"][j][i] = new_val
@@ -284,8 +295,39 @@ def tsp_form(key):
                             cols[col_idx].empty()
                 submitted = st.form_submit_button("Submit Distances")
                 if submitted:
-                    output_col.success("Distances updated! You can now solve the TSP.")
-                    output_col.write(st.session_state[f"{key}_distances"])
+                    # Call the TSP function with the distance matrix and starting city
+                    result = tsp_function(st.session_state[f"{key}_distances"], start_city)
+                    if result:
+                        shortest_path, min_distance, all_paths = result
+                        st.session_state[f"{key}_tsp_result"] = result
+                        output_col.success("Solution found!")
+                        
+                        # Display the distance matrix
+                        output_col.subheader("Distance Matrix:")
+                        # Format the matrix for display (replace inf with ∞)
+                        display_matrix = [[str(cell) if cell != float('inf') else '∞' 
+                                         for cell in row] 
+                                         for row in st.session_state[f"{key}_distances"]]
+                        output_col.write(display_matrix)
+                        
+                        # Display results
+                        with output_col.container(border=True):
+                            st.subheader("Results")
+                            st.write("Starting City:", start_city)
+                            st.write("Shortest Path:", shortest_path)
+                            st.write("Total Distance:", min_distance)
+                            
+                            # Show all paths in an expander
+                            with st.expander("View All Paths"):
+                                for path, distance in all_paths:
+                                    is_optimal = distance == min_distance
+                                    background_color = "rgba(255, 200, 210, 0.3)" if is_optimal else "white"
+                                    st.markdown(
+                                        f'<div style="background-color: {background_color}; padding: 8px;">'
+                                        f'Path: {path} | Distance: {distance}'
+                                        f'</div>',
+                                        unsafe_allow_html=True
+                                    )
 
 def sequential_search_form(key, search_function):
     col1, col2 = st.columns([1, 3])
