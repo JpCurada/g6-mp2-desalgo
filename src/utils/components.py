@@ -182,7 +182,11 @@ def knapsack_form(key, knapsack_function):
                     st.session_state[f"{key}_items"][idx] = (item_id, st.session_state[f"{key}_items"][idx][1], new_value)
                 
                 with remove_col:
+<<<<<<< HEAD
+                    if st.button("Delete", key=f"{key}_remove_item_{idx}"):
+=======
                     if st.button("Del", key=f"{key}_remove_item_{idx}"):
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
                         st.session_state[f"{key}_items"].pop(idx)
                         st.rerun()
             
@@ -249,11 +253,20 @@ def knapsack_form(key, knapsack_function):
                     with a total value of **{best_value}** and weight of **{total_weight}**.
                     """)
 
+<<<<<<< HEAD
+def tsp_form(key):
+=======
 def tsp_form(key, tsp_function):
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
     input_col, output_col = st.columns([2, 3])
     with input_col:
         num_cities = st.number_input("Enter the number of cities", min_value=3, step=1, key=f"{key}_num_cities")
         if num_cities:
+<<<<<<< HEAD
+            # Initialize distances matrix in session state if not present or if num_cities changed
+            if f"{key}_distances" not in st.session_state or len(st.session_state[f"{key}_distances"]) != num_cities:
+                st.session_state[f"{key}_distances"] = [[0 if i == j else None for j in range(int(num_cities))] for i in range(int(num_cities))]
+=======
             # Add starting city selector
             start_city = st.number_input(
                 "Select starting city (0-indexed)",
@@ -267,6 +280,7 @@ def tsp_form(key, tsp_function):
             # Initialize distances matrix with infinity instead of 0
             if f"{key}_distances" not in st.session_state or len(st.session_state[f"{key}_distances"]) != num_cities:
                 st.session_state[f"{key}_distances"] = [[float('inf') if i != j else 0 for j in range(int(num_cities))] for i in range(int(num_cities))]
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
 
             with st.form(key=f"{key}_distance_form"):
                 st.write("Enter the distances between each unique pair of cities:")
@@ -278,16 +292,26 @@ def tsp_form(key, tsp_function):
                     for col_idx in range(max_cols):
                         if col_idx < len(row_pairs):
                             i, j = row_pairs[col_idx]
+<<<<<<< HEAD
+                            val = st.session_state[f"{key}_distances"][i][j] if st.session_state[f"{key}_distances"][i][j] is not None else 1
+                            new_val = cols[col_idx].number_input(
+                                f"City {i+1} → City {j+1}",
+=======
                             # Use 1 as default value for distances
                             val = st.session_state[f"{key}_distances"][i][j] if st.session_state[f"{key}_distances"][i][j] != float('inf') else 1
                             new_val = cols[col_idx].number_input(
                                 f"City {i} → City {j}",
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
                                 min_value=1,
                                 step=1,
                                 value=val,
                                 key=f"{key}_{i}_{j}",
                                 label_visibility="visible",
+<<<<<<< HEAD
+                                placeholder="0"
+=======
                                 placeholder="Distance"
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
                             )
                             st.session_state[f"{key}_distances"][i][j] = new_val
                             st.session_state[f"{key}_distances"][j][i] = new_val
@@ -295,6 +319,10 @@ def tsp_form(key, tsp_function):
                             cols[col_idx].empty()
                 submitted = st.form_submit_button("Submit Distances")
                 if submitted:
+<<<<<<< HEAD
+                    output_col.success("Distances updated! You can now solve the TSP.")
+                    output_col.write(st.session_state[f"{key}_distances"])
+=======
                     # Call the TSP function with the distance matrix and starting city
                     result = tsp_function(st.session_state[f"{key}_distances"], start_city)
                     if result:
@@ -328,6 +356,7 @@ def tsp_form(key, tsp_function):
                                         f'</div>',
                                         unsafe_allow_html=True
                                     )
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
 
 def sequential_search_form(key, search_function):
     col1, col2 = st.columns([1, 3])

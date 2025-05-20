@@ -17,11 +17,32 @@ def fnBubbleSort(arrInput: list, boolAscending: bool = True) -> tuple[list, list
     References:
         https://www.geeksforgeeks.org/bubble-sort-algorithm/
     """
+<<<<<<< HEAD
+=======
     
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
     intSize: int = len(arrInput)
     arrSteps: list = []
     arrResult: list = arrInput.copy()
 
+<<<<<<< HEAD
+    for i in range(intSize):
+        boolSwapped: bool = False
+        for j in range(0, intSize - i - 1):
+            if arrResult[j] > arrResult[j + 1]:
+                arrResult[j], arrResult[j + 1] = arrResult[j + 1], arrResult[j]
+                boolSwapped = True
+        
+        if boolSwapped:
+            arrSteps.append(arrResult.copy())
+        
+        if not boolSwapped:
+            break
+
+    if not boolAscending:
+        arrResult.reverse()
+        arrSteps.append(arrResult.copy())
+=======
     if boolAscending:
         for i in range(intSize):
             boolSwapped: bool = False
@@ -48,6 +69,7 @@ def fnBubbleSort(arrInput: list, boolAscending: bool = True) -> tuple[list, list
             
             if not boolSwapped:
                 break
+>>>>>>> 944376154df1e63de6ba480580b7fbbf05e3ee19
 
     return arrResult, arrSteps
 
