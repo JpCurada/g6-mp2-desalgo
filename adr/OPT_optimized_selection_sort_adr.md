@@ -86,26 +86,26 @@ def optimizedSelectionSort(listInput, ascending=True):
 *We perform searches that increase the frequency of accessed elements and reorder the list accordingly.*
 
 1. Pass 1 (i = 0):
-        Find the minimum from index 0 to 4: min = 2 at index 4
-        Swap 5 and 2 → `[2, 3, 8, 6, 5]`
+        *Find the minimum from index 0 to 4: min = 2 at index 4*
+        *Swap 5 and 2 → `[2, 3, 8, 6, 5]`*
 
 2. Pass 2 (i = 1):
-        Minimum from index 1 to 4: min = 3 at index 1
-        No swap needed → `[2, 3, 8, 6, 5]`
+        *Minimum from index 1 to 4: min = 3 at index 1*
+        *No swap needed → `[2, 3, 8, 6, 5]`*
 
 3. Pass 3 (i = 2):
-        Minimum from index 2 to 4: min = 5 at index 4
-        Swap 8 and 5 → `[2, 3, 5, 6, 8]`
+        *Minimum from index 2 to 4: min = 5 at index 4*
+        *Swap 8 and 5 → `[2, 3, 5, 6, 8]`*
 
 4. Pass 4 (i = 3):
-        Minimum from index 3 to 4: min = 6 at index 3
-        No swap needed → `[2, 3, 5, 6, 8]`
+        *Minimum from index 3 to 4: min = 6 at index 3*
+        *No swap needed → `[2, 3, 5, 6, 8]`*
 
 5. Pass 5 (i = 4):
-        Only one element left → no operation.
+        *Only one element left → no operation.*
 
 **C. Final Output:**  
-Sorted List (Ascending): [2, 3, 5, 6, 8]
+*Sorted List (Ascending): [2, 3, 5, 6, 8]*
 ---
 
 ## IV. Discussion

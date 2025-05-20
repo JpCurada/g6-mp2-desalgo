@@ -30,7 +30,7 @@ FUNCTION fnSelectionSort(arrInput, boolAscending = True):
 ```
 
 **C. Brief Description:**  
-Selection Sort is a comparison-based sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist. It repeatedly selects the minimum (or maximum) element from the unsorted portion and places it in its correct position. This implementation supports both ascending and descending order and works with numbers or strings. It also records each significant step of the sorting process for visualization or analysis.
+*Selection Sort is a comparison-based sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist. It repeatedly selects the minimum (or maximum) element from the unsorted portion and places it in its correct position. This implementation supports both ascending and descending order and works with numbers or strings. It also records each significant step of the sorting process for visualization or analysis.*
 ---
 
 ## II. Python Implementation
@@ -86,31 +86,30 @@ def fnSelectionSort(arrInput: list, boolAscending: bool = True) -> tuple[list, l
 *Initial array: ["banana", "apple", "cherry", "date"]*
 
 1. Pass 1 (i = 0):
-        Find minimum from index 0 to 3:
-        Compare "banana" with "apple" → "apple" < "banana" → min = "apple" at index 1
-        Compare "apple" with "cherry" → "apple" < "cherry" → min stays at index 1
-        Compare "apple" with "date" → "apple" < "date" → min stays at index 1
-        Swap "banana" and "apple":
-        `["apple", "banana", "cherry", "date"]`
+        *Find minimum from index 0 to 3:*
+        *Compare "banana" with "apple" → "apple" < "banana" → min = "apple" at index 1*
+        *Compare "apple" with "cherry" → "apple" < "cherry" → min stays at index 1*
+        *Compare "apple" with "date" → "apple" < "date" → min stays at index 1*
+        *Swap "banana" and "apple":`["apple", "banana", "cherry", "date"]`*
 
 2. Pass 2 (i = 1):
-        Find minimum from index 1 to 3:
-        Compare "banana" with "cherry" → "banana" < "cherry" → min = "banana" at index 1
-        Compare "banana" with "date" → "banana" < "date" → min stays at index 1
-        No swap needed.
+        *Find minimum from index 1 to 3:*
+        *Compare "banana" with "cherry" → "banana" < "cherry" → min = "banana" at index 1*
+        *Compare "banana" with "date" → "banana" < "date" → min stays at index 1*
+        *No swap needed.*
 
 3. Pass 4 (i = 3):
-        Only one element left ("date") → no operation.
+        *Only one element left ("date") → no operation*
 
 4. Pass 4 (i = 3):
-        Minimum from index 3 to 4: min = 6 at index 3
-        No swap needed → `[2, 3, 5, 6, 8]`
+        *Minimum from index 3 to 4: min = 6 at index 3*
+        *No swap needed → `[2, 3, 5, 6, 8]`*
 
 5. Pass 5 (i = 4):
-        Only one element left → no operation.
+        *Only one element left → no operation.*
 
 **C. Final Output:**  
-Sorted array: ["apple", "banana", "cherry", "date"]
+*Sorted array: ["apple", "banana", "cherry", "date"]*
 ---
 
 ## IV. Discussion
