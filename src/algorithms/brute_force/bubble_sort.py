@@ -17,6 +17,7 @@ def fnBubbleSort(arrInput: list, boolAscending: bool = True) -> tuple[list, list
     References:
         https://www.geeksforgeeks.org/bubble-sort-algorithm/
     """
+    
     intSize: int = len(arrInput)
     arrSteps: list = []
     arrResult: list = arrInput.copy()
