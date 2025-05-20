@@ -6,7 +6,7 @@ import interfaces as pg
 st.set_page_config(page_title="Machine Problem II", page_icon=":material/network_intelligence_history:", layout="wide", initial_sidebar_state="collapsed")
 
 # Load custom CSS
-with open("assets/css/styles.css") as css:
+with open(r"assets/css/styles.css") as css:
     st.markdown(f'<style>{css.read()}</style>', unsafe_allow_html=True)
 
 # Define your pages
