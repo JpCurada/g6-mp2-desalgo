@@ -30,7 +30,7 @@ FUNCTION fnSelectionSort(arrInput, boolAscending = True):
 ```
 
 **C. Brief Description:**  
-*Selection Sort is a comparison-based sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist. It repeatedly selects the minimum (or maximum) element from the unsorted portion and places it in its correct position. This implementation supports both ascending and descending order and works with numbers or strings. It also records each significant step of the sorting process for visualization or analysis.*
+Selection Sort is a comparison-based sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist. It repeatedly selects the minimum (or maximum) element from the unsorted portion and places it in its correct position. This implementation supports both ascending and descending order and works with numbers or strings. It also records each significant step of the sorting process for visualization or analysis.
 ---
 
 ## II. Python Implementation
@@ -79,11 +79,11 @@ def fnSelectionSort(arrInput: list, boolAscending: bool = True) -> tuple[list, l
 ## III. Simulation / Step-by-Step Example
 
 **A. Sample Input:**  
-*["banana", "apple", "cherry", "date"]*
-*boolAscending = True*
+["banana", "apple", "cherry", "date"]
+boolAscending = True
 
 **B. Step-by-Step Process:**  
-*Initial array: ["banana", "apple", "cherry", "date"]*
+Initial array: ["banana", "apple", "cherry", "date"]
 
 1. Pass 1 (i = 0):
         *Find minimum from index 0 to 3:*
@@ -109,7 +109,7 @@ def fnSelectionSort(arrInput: list, boolAscending: bool = True) -> tuple[list, l
         *Only one element left → no operation.*
 
 **C. Final Output:**  
-*Sorted array: ["apple", "banana", "cherry", "date"]*
+Sorted array: ["apple", "banana", "cherry", "date"]
 ---
 
 ## IV. Discussion
