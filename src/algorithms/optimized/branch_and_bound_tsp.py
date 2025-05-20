@@ -96,13 +96,18 @@ def branch_and_bound_tsp(cost_matrix, start_vertex=0):
     
     Args:
         cost_matrix (list of list of float): The cost matrix representing the graph.
+        start_vertex (int): The starting vertex for the path.
         
     Returns:
-        tuple: (minimum cost, best path as a list of vertices)
+        tuple: (shortest_path, min_cost, all_paths)
+            - shortest_path: List of vertices representing the optimal path
+            - min_cost: The minimum cost of the optimal path
+            - all_paths: List of tuples (path, cost) for all valid paths found
     """
     length = len(cost_matrix)
     INFINITE = float('inf')
     priority = []
+    all_paths = []
 
     initial_path = [start_vertex]
     initial_matrix = copy_matrix(cost_matrix)
@@ -120,6 +125,8 @@ def branch_and_bound_tsp(cost_matrix, start_vertex=0):
         if min_node.level == length - 1:
             final_path = min_node.path + [start_vertex]
             final_cost = min_node.cost + cost_matrix[min_node.vertex][start_vertex]
+            if final_cost < INFINITE:
+                all_paths.append((final_path, final_cost))
             if final_cost < min_cost:
                 min_cost = final_cost
                 best_path = final_path
@@ -142,5 +149,11 @@ def branch_and_bound_tsp(cost_matrix, start_vertex=0):
 
     if best_path:
         min_cost = calculate_path_cost(best_path, cost_matrix)
+        # Sort paths by cost
+        all_paths.sort(key=lambda x: x[1])
+    else:
+        best_path = [start_vertex]
+        min_cost = 0
+        all_paths = [(best_path, min_cost)]
 
-    return min_cost, best_path
+    return best_path, min_cost, all_paths

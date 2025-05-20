@@ -1,4 +1,4 @@
-def fnTSPOptimized(arrDistanceMatrix: list, intStartCity: int) -> tuple[list, int]:
+def fnTSPOptimized(arrDistanceMatrix: list, intStartCity: int) -> tuple[list, int, list]:
     """
     Description:
         Solves the Traveling Salesman Problem using dynamic programming with bit 
@@ -14,6 +14,7 @@ def fnTSPOptimized(arrDistanceMatrix: list, intStartCity: int) -> tuple[list, in
         tuple: A tuple containing:
             - list: The optimal path as city indices (starting and ending with intStartCity)
             - int: Total distance of the optimal path
+            - list: List of tuples (path, distance) for all valid paths found
 
     References:
         https://www.geeksforgeeks.org/travelling-salesman-problem-implementation-using-dynamic-programming/
@@ -64,21 +65,37 @@ def fnTSPOptimized(arrDistanceMatrix: list, intStartCity: int) -> tuple[list, in
     intFinalMask: int = (1 << intCityCount) - 1
     intMinCost: int = float('inf')
     intLastCity: int = None
+    all_paths = []
     
     for intCity in range(intCityCount):
         if intCity == intStartCity:
             continue
             
         intTotalCost: int = arrDPCost[intFinalMask][intCity] + arrDistanceMatrix[intCity][intStartCity]
-        if intTotalCost < intMinCost:
-            intMinCost = intTotalCost
-            intLastCity = intCity
+        if intTotalCost < float('inf'):
+            # Reconstruct this path
+            path = [intStartCity]
+            currentCity = intCity
+            currentMask = intFinalMask
+            
+            while currentCity != intStartCity:
+                path.insert(1, currentCity)
+                tempCity = arrDPPrev[currentMask][currentCity]
+                currentMask ^= (1 << currentCity)
+                currentCity = tempCity
+            
+            path.append(intStartCity)  # Complete the cycle
+            all_paths.append((path, intTotalCost))
+            
+            if intTotalCost < intMinCost:
+                intMinCost = intTotalCost
+                intLastCity = intCity
     
     # Handle single city case
     if intLastCity is None:
-        return [intStartCity], 0
+        return [intStartCity], 0, [([intStartCity], 0)]
     
-    # Reconstruct path
+    # Reconstruct optimal path
     arrPath: list = [intStartCity]
     intCurrentCity: int = intLastCity
     intCurrentMask: int = intFinalMask
@@ -89,4 +106,9 @@ def fnTSPOptimized(arrDistanceMatrix: list, intStartCity: int) -> tuple[list, in
         intCurrentMask ^= (1 << intCurrentCity)
         intCurrentCity = intTempCity
     
-    return arrPath, intMinCost
+    arrPath.append(intStartCity)  # Complete the cycle
+    
+    # Sort paths by total distance
+    all_paths.sort(key=lambda x: x[1])
+    
+    return arrPath, intMinCost, all_paths

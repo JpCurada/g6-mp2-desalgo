@@ -3,11 +3,6 @@ from utils.components import sorting_form, item_adder, knapsack_form, tsp_form, 
 
 from algorithms.brute_force import bubble_sort, selection_sort, linear_search, knapsack_problem, travelling_salesman
 
-def sequential_search(arr, target):
-    for idx, val in enumerate(arr):
-        if val == target:
-            return idx
-    return None
 
 def brute_force_page():
     st.title("Brute Force Algorithms")

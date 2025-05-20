@@ -182,7 +182,7 @@ def knapsack_form(key, knapsack_function):
                     st.session_state[f"{key}_items"][idx] = (item_id, st.session_state[f"{key}_items"][idx][1], new_value)
                 
                 with remove_col:
-                    if st.button("Delete", key=f"{key}_remove_item_{idx}"):
+                    if st.button("Del", key=f"{key}_remove_item_{idx}"):
                         st.session_state[f"{key}_items"].pop(idx)
                         st.rerun()
             
