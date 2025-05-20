@@ -1,12 +1,19 @@
 import streamlit as st
 import os
 import interfaces as pg
+from pathlib import Path
+
+# Get the absolute path to the directory where your current script is located
+current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+
+# Construct the absolute path to your CSS file
+css_file_path = current_dir / "assets" / "css" / "styles.css"
 
 # Page configuration
 st.set_page_config(page_title="Machine Problem II", page_icon=":material/network_intelligence_history:", layout="wide", initial_sidebar_state="collapsed")
 
 # Load custom CSS
-with open("assets/css/styles.css") as css:
+with open(css_file_path) as css:
     st.markdown(f'<style>{css.read()}</style>', unsafe_allow_html=True)
 
 # Define your pages
