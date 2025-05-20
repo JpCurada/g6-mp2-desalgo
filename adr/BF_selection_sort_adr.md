@@ -32,7 +32,6 @@ FUNCTION fnSelectionSort(arrInput, boolAscending = True):
 **C. Brief Description:**  
 
 Selection Sort is a comparison-based sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist. It repeatedly selects the minimum (or maximum) element from the unsorted portion and places it in its correct position. This implementation supports both ascending and descending order and works with numbers or strings. It also records each significant step of the sorting process for visualization or analysis.
----
 
 ## II. Python Implementation
 
