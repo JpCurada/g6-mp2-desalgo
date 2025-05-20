@@ -1,6 +1,6 @@
 def bidirectional_enhanced_selection_sort(intArray, ascending):
     """
-        This function use the advantage of applying the selection sort algorithm bidirectionally (from left to right & right to left in one iteration), swapping the previous maximum/minimum to the location before the new maximum/minimum, storing the new location of previous maximum/minimum to the stack, and once there's no new maximum/minimum, then the current maximum/minimum will be place to its correct position. To continue, the previous maximum/minimum in the stack will be use as the starting point for the next iteration and will repeat the process until the array is sorted. And Finally, the sorting will stop when there is no swapped performed and empty stack or the stack pop of both are equal, or the front search is greater than the end search and the end search is less than the front search.
+        This function use the advantage of applying the selection sort algorithm bidirectionally (from left to right & right to left in one iteration), swapping the previous maximum/minimum to the location before the new maximum/minimum, storing the new location of previous maximum/minimum to the stack, and once there's no new maximum/minimum, then the current maximum/minimum will be place to its correct position. To continue, the previous maximum/minimum in the stack will be use as the starting point for the next iteration and will repeat the process. And Finally, the sorting will stop when there is an empty stack or the stack pop of both are equal, or the front search is greater than the end search and the end search is less than the front search.
     
     Reference:
         https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828471
@@ -30,14 +30,12 @@ def bidirectional_enhanced_selection_sort(intArray, ascending):
 
     #loop through the array
     while intFront<intEnd and intEnd>intFront:
-        booleanSwapped = False
 
         #loop from left to right (sort the large value)
         for i in range(intCurrentMax, intEnd):
 
             if(ascending):
                 if(intArray[intCurrentMax] < intArray[i]):
-                    booleanSwapped = True
                     intTemporaryContainer = intArray[intCurrentMax]
                     intArray[intCurrentMax] = intArray[i - 1]
                     intArray[i - 1] = intTemporaryContainer
@@ -47,7 +45,6 @@ def bidirectional_enhanced_selection_sort(intArray, ascending):
                     intCurrentMax = i
             else:
                 if(intArray[intCurrentMax] > intArray[i]):
-                    booleanSwapped = True
                     intTemporaryContainer = intArray[intCurrentMax]
                     intArray[intCurrentMax] = intArray[i - 1]
                     intArray[i - 1] = intTemporaryContainer
@@ -67,7 +64,6 @@ def bidirectional_enhanced_selection_sort(intArray, ascending):
         for j in range(intCurrentMin, intFront - 1, -1):
             if(ascending):
                 if(intArray[intCurrentMin] > intArray[j]):
-                    booleanSwapped = True
                     intTemporaryContainer = intArray[intCurrentMin]
                     intArray[intCurrentMin] = intArray[j + 1]
                     intArray[j + 1] = intTemporaryContainer
@@ -77,7 +73,6 @@ def bidirectional_enhanced_selection_sort(intArray, ascending):
                     intCurrentMin = j
             else:
                 if(intArray[intCurrentMin] < intArray[j]):
-                    booleanSwapped = True
                     intTemporaryContainer = intArray[intCurrentMin]
                     intArray[intCurrentMin] = intArray[j + 1]
                     intArray[j + 1] = intTemporaryContainer
@@ -103,10 +98,6 @@ def bidirectional_enhanced_selection_sort(intArray, ascending):
                 break
 
         except IndexError:
-            
-            if(not booleanSwapped):
-                break
-
             intCurrentMax = intFront
             intCurrentMin = intEnd
             continue

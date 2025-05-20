@@ -21,22 +21,32 @@ def fnBubbleSort(arrInput: list, boolAscending: bool = True) -> tuple[list, list
     arrSteps: list = []
     arrResult: list = arrInput.copy()
 
-    for i in range(intSize):
-        boolSwapped: bool = False
-        for j in range(0, intSize - i - 1):
-            if arrResult[j] > arrResult[j + 1]:
-                arrResult[j], arrResult[j + 1] = arrResult[j + 1], arrResult[j]
-                boolSwapped = True
-        
-        if boolSwapped:
-            arrSteps.append(arrResult.copy())
-        
-        if not boolSwapped:
-            break
-
-    if not boolAscending:
-        arrResult.reverse()
-        arrSteps.append(arrResult.copy())
+    if boolAscending:
+        for i in range(intSize):
+            boolSwapped: bool = False
+            for j in range(0, intSize - i - 1):
+                if arrResult[j] > arrResult[j + 1]:
+                    arrResult[j], arrResult[j + 1] = arrResult[j + 1], arrResult[j]
+                    boolSwapped = True
+            
+            if boolSwapped:
+                arrSteps.append(arrResult.copy())
+            
+            if not boolSwapped:
+                break
+    else:
+        for i in range(intSize):
+            boolSwapped: bool = False
+            for j in range(0, intSize - i - 1):
+                if arrResult[j] < arrResult[j + 1]:
+                    arrResult[j], arrResult[j + 1] = arrResult[j + 1], arrResult[j]
+                    boolSwapped = True
+            
+            if boolSwapped:
+                arrSteps.append(arrResult.copy())
+            
+            if not boolSwapped:
+                break
 
     return arrResult, arrSteps
 

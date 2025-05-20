@@ -90,7 +90,7 @@ def calculate_path_cost(path, cost_matrix):
         total += cost_matrix[path[i]][path[i + 1]]
     return total
 
-def branch_and_bound_tsp(cost_matrix):
+def branch_and_bound_tsp(cost_matrix, start_vertex=0):
     """
     This is the main function that solves the Traveling Salesman Problem using the branch and bound method and returns the minimum cost and the best path found.
     
@@ -104,39 +104,36 @@ def branch_and_bound_tsp(cost_matrix):
     INFINITE = float('inf')
     priority = []
 
+    initial_path = [start_vertex]
     initial_matrix = copy_matrix(cost_matrix)
     cost = reduce_matrix(initial_matrix)
-    root = Node(path = [0], reduced_matrix = initial_matrix, cost = cost, vertex = 0, level = 0)
+    root = Node(path = initial_path, reduced_matrix = initial_matrix, cost = cost, vertex = 0, level = 0)
     priority.append(root)
     min_cost = INFINITE
     best_path = []
 
     while priority:
-        min_node = get_min_node(priority)
+        # Extract the node with the minimum cost
+        min_node = priority.pop(0)
+
+        # If all vertices are visited, calculate the cost
         if min_node.level == length - 1:
-            last = min_node.vertex
-            for i in range(length):
-                if i not in min_node.path:
-                    min_node.path.append(i)
-                    min_node.cost += min_node.reduced_matrix[last][i]
-                    last = i
-            
-            min_node.path.append(0)
-            min_node.cost += cost_matrix[last][0]
-            
-            if min_node.cost < min_cost:
-                min_cost = min_node.cost
-                best_path = min_node.path[:]
+            final_path = min_node.path + [start_vertex]
+            final_cost = min_node.cost + cost_matrix[min_node.vertex][start_vertex]
+            if final_cost < min_cost:
+                min_cost = final_cost
+                best_path = final_path
             continue
 
+        # Expand the current node
         for i in range(length):
-            if i not in min_node.path and min_node.reduced_matrix[min_node.vertex][i] != INFINITE:
+            if i not in min_node.path:
                 new_path = min_node.path + [i]
                 new_matrix = copy_matrix(min_node.reduced_matrix)
                 for k in range(length):
                     new_matrix[min_node.vertex][k] = INFINITE
                     new_matrix[k][i] = INFINITE
-                new_matrix[i][0] = INFINITE
+                new_matrix[i][start_vertex] = INFINITE
                 cost_to_i = min_node.reduced_matrix[min_node.vertex][i]
                 new_cost = min_node.cost + cost_to_i + reduce_matrix(new_matrix)
                 
