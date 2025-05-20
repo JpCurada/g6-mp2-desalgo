@@ -6,7 +6,6 @@ from algorithms.optimized import (optimized_bubble_sort, optimized_linear_search
 
 def optimized_page():
     st.title("Optimized Algorithms")
-    st.write("This is the optimized algorithms page.")
 
     bubble_tab, select_tab, search_tab, knap_tab, tsp_tab = st.tabs([
         "Bubble Sort",
