@@ -30,8 +30,9 @@ FUNCTION optimizedSelectionSort(listInput, ascending = True):
 ```
 
 **C. Brief Description:**  
-*This optimized version of Selection Sort iteratively finds the minimum (or maximum) element in the unsorted portion of the list and swaps it with the first unsorted element — but only if a smaller (or larger) value is found. It avoids unnecessary swaps, making it more efficient in practice. It supports both numeric and case-insensitive string comparisons and maintains the original list by working on a copy.*
----
+
+This optimized version of Selection Sort iteratively finds the minimum (or maximum) element in the unsorted portion of the list and swaps it with the first unsorted element — but only if a smaller (or larger) value is found. It avoids unnecessary swaps, making it more efficient in practice. It supports both numeric and case-insensitive string comparisons and maintains the original list by working on a copy.
+
 
 ## II. Python Implementation
 
