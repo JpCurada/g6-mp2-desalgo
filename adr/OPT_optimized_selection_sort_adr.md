@@ -107,8 +107,8 @@ We perform searches that increase the frequency of accessed elements and reorder
         *Only one element left → no operation.*
 
 **C. Final Output:**  
-*Sorted List (Ascending): [2, 3, 5, 6, 8]*
----
+
+Sorted List (Ascending): [2, 3, 5, 6, 8]
 
 ## IV. Discussion
 
