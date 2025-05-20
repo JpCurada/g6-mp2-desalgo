@@ -1,0 +1,5 @@
+    arrArraySize = len(arrArray)
+    for i in range(0, arrArraySize):
+        if arrArray[i] == intTarget:
+            return True
+    return False
