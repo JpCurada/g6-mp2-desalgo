@@ -1,0 +1,3289 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[a4paper,top=1in,left=1in,right=1in,bottom=1in]{geometry} % Set consistent margins
+\renewcommand{\thesection}{\Roman{section}.}
+\renewcommand{\thesubsection}{\Alph{subsection}.}
+\renewcommand{\thesubsubsection}
+% \thesubsection\arabic{subsubsection}
+
+\usepackage{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{enumitem}
+% \usepackage{hyperref}
+\usepackage{courier}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+
+
+% Code styling
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  tabsize=2,
+  language=Python
+}
+
+
+\doublespacing
+
+\title{\\[3em]Machine Problem II: Brute Force Algorithms\\[3em]}
+\author{Curada, John Paul \\ Zaragoza, Marie Criz \\ Lucero, Ken Audie S. \\ Faeldonia, Elias Von Isaac R. \\ Oja, Ma. Izabelle L. \\ Racelis, Michael Richmond V. \\ Cansino, Florence Lee F. \\ Ramilo, Gian G. \\ Magtanong, Gabriel Andre E.\\[2em] }
+\date{May 2025}
+
+\begin{document}
+\fancyhf{} % clear all header and footer fields
+\fancyhead[R]{%
+  \href{https://github.com/JpCurada/g6-mp2-desalgo}{\includegraphics[height=20pt]{github.png}} \quad
+  \href{https://daa-g6-machine-problem-2.streamlit.app/}{\includegraphics[height=20pt]{machine.png}}
+}
+
+\fancyfoot[R]{\thepage} % center page number in the footer
+\renewcommand{\headrulewidth}{0pt} % remove header line
+
+
+\renewcommand{\arraystretch}{1.2}
+
+\maketitle
+\newpage
+
+\tableofcontents  % Table of Contents
+\newpage          % starts main content on a new page
+
+            
+\clearpage
+
+\section{Introduction}
+\subsection*{Definition and Concept of Brute Force Algorithms}
+Brute force algorithms represent one of the most fundamental problem-solving strategies in computer science. These algorithms solve problems by examining all possible solution candidates systematically and exhaustively until the correct solution is found. The approach derives its name from the straightforward, direct manner in which it tackles problems—similar to using "brute force" or raw computational power rather than sophisticated techniques.
+At its core, a brute force algorithm works by:
+
+\begin{itemize}
+    \item Generating all possible solution candidates
+    \item Testing each candidate against the problem requirements
+    \item Selecting the first (or best) candidate that satisfies the requirements
+\end{itemize}
+While conceptually simple, brute force algorithms serve as a baseline for understanding algorithmic efficiency and establish the foundation for more complex optimization techniques.
+    
+\subsection*{Significance and Applications}
+Despite their simplicity, brute force algorithms hold significant importance for several reasons:
+
+\begin{itemize}
+    \item \textbf{Guaranteed Correctness:} Brute force algorithms are guaranteed to find the optimal solution if it exists, as they explore the entire solution space.
+    \item \textbf{Benchmark for Comparison:} They establish a baseline against which more sophisticated algorithms can be measured and evaluated.
+    \item \textbf{Educational Value:} Understanding brute force approaches provides insight into the fundamental nature of computational problems and their inherent complexity.
+    \item \textbf{Practical Applications:} For problems with small input sizes or where optimal solutions are crucial, brute force algorithms may be appropriate and effective.
+    \item \textbf{Foundation for Advanced Techniques:} Many advanced algorithmic strategies build upon or improve brute force approaches.
+\end{itemize}
+
+In practical scenarios, brute force algorithms find applications in various domains, including cryptography (for exhaustive key searches), bioinformatics (for sequence matching), and optimization problems when the input size is manageably small.
+
+
+\subsection*{Scope and Objectives of the Report}
+This report aims to provide a comprehensive review and implementation of five key brute force algorithms:
+
+\begin{itemize}
+    \item Bubble Sort
+    \item Selection Sort
+    \item Sequential Search
+    \item Traveling Salesman Problem
+    \item Knapsack Problem
+\end{itemize}
+
+
+The primary objectives of this document are to:
+\begin{enumerate}
+    \item Analyze and review these algorithms thoroughly
+    \item Implement and demonstrate their functionalities
+    \item Identify their strengths, weaknesses, and real-world applications
+    \item Explore optimization techniques to improve their performance
+    \item Provide insights and learning outcomes from working with these algorithms
+\end{enumerate}
+
+
+This work satisfies the requirements of Machine Problem 2, which focuses on understanding and implementing brute force algorithms to gain practical experience with theoretical computer science concepts.
+
+\subsection*{Document Structure Overview}
+This document is structured into six major sections:
+\begin{enumerate}
+    \item \textbf{Introduction:} Establishes the foundation by defining brute force algorithms and outlining the report's content.
+    \item \textbf{Brute Force Algorithms:} Provides detailed coverage of each algorithm, including:
+    \begin{itemize}
+        \item Brief descriptions and pseudocode
+        \item Python implementations
+        \item Step-by-step simulations with examples
+        \item Discussion of implementation logic and potential improvements
+    \end{itemize}
+    \item \textbf{Analysis of Time Complexity:} Offers a detailed examination of the computational efficiency of each algorithm, including derivation and explanation of their time complexities.
+    \item \textbf{Algorithms Comparison:} Presents a comparative analysis of all five algorithms in tabular form, highlighting their strengths, weaknesses, and practical applications.
+    \item \textbf{Optimization Techniques:} Investigates and implements various methods to enhance the performance of these brute force algorithms, demonstrating the improvements through code and analysis.
+    \item \textbf{Findings and Conclusion:} Summarizes key insights gained from the study, discusses the importance of understanding brute force algorithms, and presents learning outcomes.
+\end{enumerate}
+
+
+\clearpage
+\section{Brute Force Algorithms}
+
+\subsection{Bubble Sort}
+\subsubsection*{Brief Description}
+Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in the wrong order. This algorithm is not suitable for large data sets as its average and worst-case time complexity are quite high.
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+Start
+    - Accept array(arrInput) and boolean(boolAscending) to check if it will be 
+    sorted ascending or descending.
+    - initialize the size of the array(intSize)
+    - initialize the variable to store the steps (arrSteps)
+    - initialize the variable for the result of the sorting by first copying the 
+    array that is passed first (arrResult)
+    -If boolAscending is true
+        - for i is less than size of the array
+            set boolSwapped to false
+                - for j is less than the size of array minus i
+                    - if the value of element at index[j] is greater than the 
+                    element at inde[j+1]
+                        swap the elements of index[j] and index[j+1]
+                        set boolSwapped to true
+                - if boolSwapped is true
+                    append a copy of arrayResult to arrSteps
+                - if boolSwapped is false
+                    exit the loop
+    - else if boolAscending is false
+        proceed to do the same process but it will swap if the value of element 
+        at index[j] is less than that of element at index[j+1]
+    -return variables arrResult, arrSteps
+End
+\end{lstlisting}
+
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def fnBubbleSort(arrInput: list, boolAscending: bool = True) -> tuple[list, list]:
+    """
+    Description:
+        The simplest sorting algorithm that works by repeatedly 
+        swapping the adjacent elements if they are in the wrong order.
+    Parameters:
+        arrInput (list): The array to be sorted, can contain numbers or strings
+        boolAscending (bool): Sort in ascending order if True, descending if False
+    Returns: 
+        tuple: A tuple containing:
+            - list: The sorted array
+            - list: List of steps showing the array state after each iteration
+    References:
+        https://www.geeksforgeeks.org/bubble-sort-algorithm/
+    """
+
+    intSize: int = len(arrInput)
+    arrSteps: list = []
+    arrResult: list = arrInput.copy()
+
+    if boolAscending:
+        for i in range(intSize):
+            boolSwapped: bool = False
+            for j in range(0, intSize - i - 1):
+                if arrResult[j] > arrResult[j + 1]:
+                    arrResult[j], arrResult[j + 1] = arrResult[j + 1], arrResult[j]
+                    boolSwapped = True
+
+            if boolSwapped:
+                arrSteps.append(arrResult.copy())
+
+            if not boolSwapped:
+                break
+    else:
+        for i in range(intSize):
+            boolSwapped: bool = False
+            for j in range(0, intSize - i - 1):
+                if arrResult[j] < arrResult[j + 1]:
+                    arrResult[j], arrResult[j + 1] = arrResult[j + 1], arrResult[j]
+                    boolSwapped = True
+
+            if boolSwapped:
+                arrSteps.append(arrResult.copy())
+
+            if not boolSwapped:
+                break
+
+    return arrResult, arrSteps
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\texttt{arrInput = [37, 98, 5, 12, 9], boolAscending = true}
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}[label=\arabic*.]
+    \item Start first iteration
+    \item Compare 37 and 98 — no swap
+    \item Compare 98 and 5 — swap → [37, 5, 98, 12, 9]
+    \item Compare 98 and 12 — swap → [37, 5, 12, 98, 9]
+    \item Compare 98 and 9 — swap → [37, 5, 12, 9, 98]
+    \item First iteration complete
+    \item Start second iteration
+    \item Compare 37 and 5 — swap → [5, 37, 12, 9, 98]
+    \item Compare 37 and 12 — swap → [5, 12, 37, 9, 98]
+    \item Compare 37 and 9 — swap → [5, 12, 9, 37, 98]
+    \item Second iteration complete
+    \item Start third iteration
+    \item Compare 5 and 12 — swap → no swap
+    \item Compare 12 and 9 — swap → [5, 9, 12, 37, 98]
+    \item Third iteration complete
+    \item Start fourth iteration
+    \item Compare 5 and 9 — swap → no swap
+    \item Fourth iteration complete
+\end{enumerate}
+
+\subsubsection*{Final Output}
+    Sorted List: [5, 9, 12, 37, 98]
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+The function takes input from the user then it also takes a boolean to check if it should be ascending or descending. The function used and conditional statement to check if it should be ascending or descending. In sorting the list, the function uses a nested for loop. The outer loop keeps track of how many passes while the inner loop is the one that compares and swap the adjacent elements. The rightmost value is always the first to be sorted that is why each iteration of the outerloop subtracts in the range of the inner loop. The process repeats until the list is sorted.
+
+
+
+%SELECTION SORT
+\subsection{Selection Sort}
+\subsubsection*{Brief Description}
+Selection Sort is a comparison-based sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist. It repeatedly selects the minimum (or maximum) element from the unsorted portion and places it in its correct position. This implementation supports both ascending and descending order and works with numbers or strings. It also records each significant step of the sorting process for visualization or analysis.
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+FUNCTION fnSelectionSort(arrInput, boolAscending = True):
+    SET intSize = length of arrInput
+    SET arrResult = copy of arrInput
+    SET arrSteps = empty list
+
+    FOR i FROM 0 TO intSize - 1:
+        SET intMinIndex = i
+
+        FOR j FROM i+1 TO intSize - 1:
+            SET varCurrent = lower(arrResult[j]) IF element is string ELSE 
+            arrResult[j]
+            SET varMin = lower(arrResult[intMinIndex]) IF element is string ELSE 
+            arrResult[intMinIndex]
+
+            IF boolAscending AND varCurrent < varMin:
+                SET intMinIndex = j
+            ELSE IF NOT boolAscending AND varCurrent > varMin:
+                SET intMinIndex = j
+
+        IF intMinIndex != i:
+            SWAP arrResult[i] WITH arrResult[intMinIndex]
+            APPEND current state of arrResult to arrSteps
+
+    RETURN (arrResult, arrSteps)
+    
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def fnSelectionSort(arrInput: list, boolAscending: bool = True) -> tuple[list, list]:
+    """
+    Description:
+        Selection Sort algorithm that finds the minimum/maximum element 
+        in the unsorted portion and places it at the beginning.
+
+    Parameters:
+        arrInput (list): The array to be sorted, can contain numbers or strings
+        boolAscending (bool): Sort in ascending order if True, descending if False
+
+    Returns:
+        tuple: A tuple containing:
+            - list: The sorted array
+            - list: List of steps showing the array state after each iteration
+
+    References:
+        https://www.geeksforgeeks.org/selection-sort/
+    """
+    intSize: int = len(arrInput)
+    arrResult: list = arrInput.copy()
+    arrSteps: list = []
+
+    for i in range(intSize):
+        intMinIndex: int = i
+        for j in range(i + 1, intSize):
+            varCurrent = arrResult[j].lower() if isinstance(arrResult[j], str) else arrResult[j]
+            varMin = arrResult[intMinIndex].lower() if isinstance(arrResult[intMinIndex], str) else arrResult[intMinIndex]
+
+            if (varCurrent < varMin and boolAscending) or (varCurrent > varMin and not boolAscending):
+                intMinIndex = j
+
+        if intMinIndex != i:
+            arrResult[i], arrResult[intMinIndex] = arrResult[intMinIndex], arrResult[i]
+            arrSteps.append(arrResult.copy())
+
+    return arrResult, arrSteps
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+Initial array: \texttt{["banana", "apple", "cherry", "date"], }
+\texttt{boolAscending = True}
+\subsubsection*{Step-by-Step Process}
+Initial array: \texttt{["banana", "apple", "cherry", "date"]}
+
+\begin{enumerate}
+    \item Pass 1 (i = 0):
+    \begin{itemize}
+        \item Find minimum from index 0 to 3:
+        \item Compare \texttt{"banana"} with \texttt{"apple"} → \texttt{"apple"} < \texttt{"banana"} → min = \texttt{"apple"} at index 1
+        \item Compare \texttt{"apple"} with \texttt{"cherry"} → \texttt{"apple"} < \texttt{"cherry"} → min stays at index 1
+        \item Compare \texttt{"apple"} with \texttt{"date"} → \texttt{"apple"} < \texttt{"date"} → min stays at index 1
+        \item Swap \texttt{"banana"} and \texttt{"apple"}: \texttt{["apple", "banana", "cherry", "date"]}
+    \end{itemize}
+    
+    \item Pass 2 (i = 1):
+    \begin{itemize}
+        \item Find minimum from index 1 to 3:
+        \item Compare \texttt{"banana"} with \texttt{"cherry"} → \texttt{"banana"} < \texttt{"cherry"} → min = \texttt{"banana"} at index 1
+        \item Compare \texttt{"banana"} with \texttt{"date"} → \texttt{"banana"} < \texttt{"date"} → min stays at index 1
+        \item No swap needed.
+    \end{itemize}
+
+    \item Pass 3 (i = 2):
+    \begin{itemize}
+        \item Only one element left (\texttt{"date"}) → no operation.
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Final Output}
+Sorted list : ["apple", "banana", "cherry", "date"]
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item This function applies the classic Selection Sort approach.
+    \item It supports both strings and numbers by normalizing string comparisons to lowercase.
+    \item It allows sorting in ascending or descending order through a Boolean flag.
+    \item Steps are tracked and stored only when a swap occurs, making it suitable for educational or visualization purposes.
+\end{itemize}
+\subsubsection*{Possible Improvements / Future Work}
+\begin{itemize}
+    \item Extend to support custom comparison functions (e.g., sort by length for strings).
+    \item Optimize for stability (current implementation is unstable).
+    \item Add time complexity tracking or step count summary.
+\end{itemize}
+
+
+
+%SEQUENTIAL SEARCH
+\subsection{Sequential Search}
+\subsubsection*{Brief Description}
+Sequential or Linear Search is the most basic searching algorithm and is most efficient in small, unsorted arrays. It iterates every element in an array one by one until it finds the target value or reaches the last index of the array. Since it does not require the array to be sorted, linear search is simple to implement but might be inefficient to larger data sets due to its O(n) time complexity.
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+Start
+
+- Accept the array (arrInput) and the element (varTarget) to search for.
+- Initialize variable i to 0.
+
+- While i is less than the length of the array:
+    - If the value of the element at index [i] is equal to the target element,
+        - Returns the index;
+        - Then end the process.
+    - Else, increment i by 1.
+
+- If the loop reaches the end of the array without finding the target element, return -1.
+
+End
+\end{lstlisting}
+
+
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def fnLinearSearch(arrInput: list, varTarget: any) -> int:
+    """
+    Description:
+        Performs a sequential search through the array to find the target element.
+        Returns the index of the first occurrence of the target if found.
+
+    Parameters:
+        arrInput (list): The array to search in, can contain any comparable type
+        varTarget (any): The target element to search for
+
+    Returns:
+        int: Index of the first occurrence of varTarget if found, -1 otherwise
+
+    """
+    for intIndex in range(len(arrInput)):
+        if arrInput[intIndex] == varTarget:
+            return intIndex
+    return -1
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\texttt{arrInput [6, 3, 4, 9, 7], varTarget = 4}
+
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item Start with the first element (index 0), then checks if it is equal to varTarget (6 != 4)
+    \item Move to the next element (index 1), then checks if it is equal to varTarget (3 != 4)
+    \item Move to the next element (index 2), then checks if it is equal to varTarget (4 == 4)
+    \item Since it is found, return the index 2.
+\end{enumerate}
+
+\subsubsection*{Final Output}
+Output: 2
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+The function uses a simple for loop to iterate every element in the array and compare it to the target value. If the current element matches the target value, the function immediately returns the index of that element. If the loop completes and iterated through each element without finding the target element, the function will return -1. With that, the loop will not have unnecessary iterations and indicate it to stop.
+
+\subsubsection*{Possible Improvements / Future Work}
+One potential improvement would be to modify the function to return all occurrences of the target value within the array instead of stopping at the first match. Additionally, allowing case-sensitive search for string values could improve its flexibility in handling written or text data. Lastly, it could be improved by better handling edge cases, such as if there's empty lists or invalid inputs.
+
+%TRAVELING SALESMAN PROBLEM
+\subsection{Traveling Salesman Problem}
+\subsubsection*{Brief Description}
+The Traveling Salesman Problem (TSP) Brute Force algorithm finds the shortest possible route that visits each city exactly once and returns to the starting city. It does this by recursively exploring all permutations of city visits, calculating the total distance for each path, and selecting the one with the minimum total cost. This approach guarantees an optimal solution but is computationally expensive for large numbers of cities due to its factorial time complexity.
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+Main Function:
+FUNCTION fnTSPBruteForce(distanceMatrix, startCity = 0):
+    IF distanceMatrix is not a non-empty square matrix:
+        RAISE error
+
+    IF startCity is not a valid index:
+        RAISE error
+
+    cityCount <-- number of cities in distanceMatrix
+    visited <-- list of False with length cityCount
+    visited[startCity] <-- True
+    allPaths <-- empty list
+
+    CALL fnTSPHelper(
+        visited,
+        currentCity = startCity,
+        cityCount,
+        currentDistance = 0,
+        distanceMatrix,
+        path = [startCity],
+        allPaths,
+        startCity
+    ) RETURNING bestPath, minDistance
+
+    RETURN (bestPath, minDistance, allPaths)
+
+Recursive Helper Function:
+FUNCTION fnTSPHelper(visited, currentCity, cityCount, currentDistance,
+                     distanceMatrix, path, allPaths, startCity):
+
+    IF all cities in visited are True:
+        finalPath <-- path + [startCity]
+        finalDistance <-- currentDistance + distance from currentCity to startCity
+        APPEND (finalPath, finalDistance) to allPaths
+        RETURN (finalPath, finalDistance)
+
+    minDistance <-- infinity
+    bestPath <-- empty list
+
+    FOR each city i from 0 to cityCount - 1:
+        IF visited[i] is False:
+            visited[i] <-- True
+
+            CALL fnTSPHelper(
+                visited,
+                currentCity = i,
+                cityCount,
+                currentDistance + distance from currentCity to i,
+                distanceMatrix,
+                path + [i],
+                allPaths,
+                startCity
+            ) RETURNING newPath, newDistance
+
+            IF newDistance < minDistance:
+                minDistance  <--  newDistance
+                bestPath  <--  newPath
+
+            visited[I] <-- False
+
+    RETURN (bestPath, minDistance)
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def fnTSPBruteForce(arrDistanceMatrix: list, intStartCity: int = 0) -> tuple[list, int, list]:
+    """
+    Description:
+        Solves the Traveling Salesman Problem using a recursive brute force approach
+        to find the shortest possible route that visits each city exactly once and
+        returns to the starting city.
+
+    Parameters:
+        arrDistanceMatrix (list): Square matrix where element [i][j] represents 
+                                 the distance from city i to city j
+        intStartCity (int, optional): Index of the starting city (0-indexed). Defaults to 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - list: The optimal path as city indices (starting and ending with intStartCity)
+            - int: Total distance of the optimal path
+            - list: List of tuples (path, distance) for all valid paths
+
+    References:
+        https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/
+    """
+    def fnTSPHelper(arrVisited: list, intCurrentCity: int, intCityCount: int, 
+                   intCurrentDist: int, arrDistanceMatrix: list, 
+                   arrPath: list, arrAllPaths: list, intStartCity: int) -> tuple[list, int]:
+        """
+        Description:
+            Recursive helper function to solve the TSP by exploring all possible paths.
+
+        Parameters:
+            arrVisited (list): Boolean array where arrVisited[i] is True if city i is visited
+            intCurrentCity (int): Current city being visited
+            intCityCount (int): Total number of cities
+            intCurrentDist (int): Cumulative distance of the path so far
+            arrDistanceMatrix (list): Distance matrix between cities
+            arrPath (list): Path traversed so far
+            arrAllPaths (list): List to store all valid paths and their distances
+            intStartCity (int): Starting city index
+
+        Returns:
+            tuple: A tuple containing:
+                - list: Best path found from current state
+                - int: Total distance of that path
+        """
+        if all(arrVisited):
+            final_path = arrPath + [intStartCity]
+            final_dist = intCurrentDist + arrDistanceMatrix[intCurrentCity][intStartCity]
+            arrAllPaths.append((final_path, final_dist))
+            return final_path, final_dist
+        
+        intMinDist: int = float('inf')
+        arrBestPath: list = []
+        
+        for intNextCity in range(intCityCount):
+            if not arrVisited[intNextCity]:
+                arrVisited[intNextCity] = True
+                arrNewPath, intNewDist = fnTSPHelper(
+                    arrVisited,
+                    intNextCity,
+                    intCityCount,
+                    intCurrentDist + arrDistanceMatrix[intCurrentCity][intNextCity],
+                    arrDistanceMatrix,
+                    arrPath + [intNextCity],
+                    arrAllPaths,
+                    intStartCity
+                )
+                if intNewDist < intMinDist:
+                    intMinDist = intNewDist
+                    arrBestPath = arrNewPath
+                arrVisited[intNextCity] = False
+                
+        return arrBestPath, intMinDist
+
+    if not arrDistanceMatrix or not isinstance(arrDistanceMatrix, list):
+        raise ValueError("arrDistanceMatrix must be a non-empty 2D list")
+
+    intCityCount: int = len(arrDistanceMatrix)
+    for arrRow in arrDistanceMatrix:
+        if not isinstance(arrRow, list) or len(arrRow) != intCityCount:
+            raise ValueError("arrDistanceMatrix must be a square matrix")
+
+    if not isinstance(intStartCity, int) or intStartCity < 0 or intStartCity >= intCityCount:
+        raise ValueError("intStartCity must be a valid index within the distance matrix")
+
+    arrAllPaths: list = []
+    arrVisited: list = [False] * intCityCount
+    arrVisited[intStartCity] = True
+    
+    arrBestPath, intMinDist = fnTSPHelper(
+        [True if i == intStartCity else False for i in range(intCityCount)],
+        intStartCity,
+        intCityCount,
+        0,
+        arrDistanceMatrix,
+        [intStartCity],
+        arrAllPaths,
+        intStartCity
+    )
+    
+    return arrBestPath, intMinDist, arrAllPaths
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\begin{itemize}
+    \item \texttt{startCity = 0}
+    \item \texttt{distanceMatrix} =
+    \[
+    \begin{bmatrix}
+    0 & 10 & 15 & 20 \\
+    10 & 0 & 35 & 25 \\
+    15 & 35 & 0 & 30 \\
+    20 & 25 & 30 & 0
+    \end{bmatrix}
+    \]
+\end{itemize}
+
+This matrix defines the distances between 4 cities. For example, the distance from city 0 to city 1 is 10, and from city 2 to city 3 is 30.
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item \textbf{Initialize}
+    \begin{itemize}
+        \item Number of cities: 4
+        \item Starting city: 0
+        \item \texttt{visited = [True, False, False, False]}
+        \item \texttt{path = [0]}
+        \item \texttt{allPaths = []}
+    \end{itemize}
+
+    \item \textbf{Recursive Exploration Begins}
+
+    Starting from city 0, recursively explore all permutations of the remaining cities (1, 2, 3):
+
+    \begin{itemize}
+        \item 0 → 1 → 2 → 3 → 0 → total distance = 10 + 35 + 30 + 20 = 95
+        \item 0 → 1 → 3 → 2 → 0 → total distance = 10 + 25 + 30 + 15 = 80
+        \item 0 → 2 → 1 → 3 → 0 → total distance = 15 + 35 + 25 + 20 = 95
+        \item 0 → 2 → 3 → 1 → 0 → total distance = 15 + 30 + 25 + 10 = 80
+        \item 0 → 3 → 1 → 2 → 0 → total distance = 20 + 25 + 35 + 15 = 95
+        \item 0 → 3 → 2 → 1 → 0 → total distance = 20 + 30 + 35 + 10 = 95
+    \end{itemize}
+
+    \item \textbf{Track Minimum Path}
+
+    Among all 6 possible permutations, the algorithm identifies two paths with the lowest cost:
+    \begin{itemize}
+    \item \texttt{[0, 1, 3, 2, 0]} → 80
+    \item \texttt{[0, 2, 3, 1, 0]} → 80
+\end{itemize}
+
+
+    \item \textbf{Save All Paths}
+
+    Each valid complete path and its total distance is stored in \texttt{allPaths}.
+\end{enumerate}
+
+
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item \texttt{bestPath = [0, 1, 3, 2, 0]}
+    \item \texttt{minDistance = 80}
+\end{itemize}
+\textbf{Note:} If there are multiple optimal paths with the same minimum cost, this implementation returns the first one it finds.
+
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+The algorithm was implemented using recursive backtracking to exhaustively generate all permutations of cities, ensuring that each city is visited exactly once before returning to the start. This brute-force method guarantees an optimal solution by evaluating every possible tour.
+
+\textbf{Key decisions:}
+\begin{itemize}
+    \item \textbf{Recursive design:} A helper function (\texttt{fnTSPHelper}) was used to build paths step-by-step, reducing state management complexity.
+    \item \textbf{Path tracking:} Intermediate paths and distances are accumulated and stored in \texttt{allPaths} to support full visibility into all possibilities — useful for analysis and validation.
+    \item \textbf{Validation checks:} Defensive programming techniques ensure robustness (e.g., validating that the matrix is square, the start city is valid).
+    \item \textbf{Backtracking:} Cities are marked visited during recursion and unmarked after, allowing other permutations to reuse them.
+\end{itemize}
+
+This structure separates the concerns of path generation, path evaluation, and final selection, making the logic modular and easier to maintain or extend.
+
+\subsubsection*{Possible Improvements / Future Work}
+While the brute-force method guarantees correctness, it does not scale well due to its \(\mathcal{O}(n!)\) time complexity, which becomes impractical for inputs larger than ~10 cities. Potential future enhancements include:
+
+\begin{itemize}
+    \item \textbf{Memoization / Dynamic Programming:} \\
+    Implement Held-Karp algorithm to reduce time complexity to \(\mathcal{O}(n^2 \cdot 2^n)\)
+
+    \item \textbf{Heuristics or Approximation:} \\
+    Use Greedy, Nearest Neighbor, or Genetic Algorithms for faster results on large graphs
+
+    \item \textbf{Parallelization:} \\
+    Distribute permutations across threads/cores to speed up evaluation
+
+    \item \textbf{Visualization:} \\
+    Add plotting (e.g., with matplotlib) to show tours spatially, helpful for geographic TSP instances
+
+    \item \textbf{User Configuration:} \\
+    Allow weighted constraints, asymmetric distances, or exclusion of certain cities
+\end{itemize}
+
+%KNAPSACK PROBLEM
+\subsection{Knapsack Problem}
+\subsubsection*{Brief Description}
+The Knapsack Problem is a classic optimization problem where we need to select items with maximum value without exceeding a weight capacity. The brute force approach examines all possible combinations of items, calculating the total value and weight of each subset, and identifies the optimal solution by selecting the subset with the highest value that stays within the weight constraint.
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+FUNCTION knapsack_brute_force(items, capacity):
+    # items is a list of (name, weight, value) tuples
+    # capacity is the maximum weight allowed
+    bestValue = 0
+    bestSubset = []
+    allValidSubsets = []
+
+    # Generate all possible combinations (2^n total)
+    FOR i FROM 0 TO 2^n - 1:
+        currentSubset = []
+        currentWeight = 0
+        currentValue = 0
+
+        # Check which items are included in this combination
+        FOR j FROM 0 TO n-1:
+            IF (i & (1 << j)) > 0:  # If jth bit of i is set
+                ADD items[j] TO currentSubset
+                currentWeight += items[j].weight
+                currentValue += items[j].value
+
+        # If this subset is valid and better than current best
+        IF currentWeight <= capacity:
+            ADD (currentSubset, currentWeight, currentValue) TO allValidSubsets
+            IF currentValue > bestValue:
+                bestValue = currentValue
+                bestSubset = currentSubset
+    RETURN bestSubset, bestValue, allValidSubsets
+
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def knapsack_brute_force(items, capacity):
+
+    """
+
+    Solves the 0/1 Knapsack problem by enumerating all subsets of items.
+
+    Args:
+        items (list of tuples): Each tuple contains (name, weight, value).
+        capacity (int): Maximum weight capacity.
+
+    Returns:
+        tuple:
+            best_subset (list): List of item names in the best subset.
+            best_value (int): Maximum total value achievable.
+            all_valid_subsets (list): All subsets with their weights and values.
+    """
+
+    n = len(items)
+    best_subset = []
+    best_value = 0
+    all_valid_subsets = []
+
+    # Iterate through all possible item combinations (2^n)
+    for i in range(1 << n):  # 1 << n is 2^n
+        subset = []
+        total_weight = 0
+        total_value = 0
+
+        # Check which items are in the current subset
+        for j in range(n):
+            if (i & (1 << j)) > 0:  # Check if jth bit is set
+                item_name, item_weight, item_value = items[j]
+                subset.append(item_name)
+                total_weight += item_weight
+                total_value += item_value
+        # If this subset is valid (within capacity)
+
+        if total_weight <= capacity:
+            all_valid_subsets.append((subset, total_weight, total_value))
+            # Update best if current is better
+            if total_value > best_value:
+                best_value = total_value
+                best_subset = subset.copy()
+
+    return best_subset, best_value, all_valid_subsets
+3.4.4 Simulation / Step-by-Step Example
+3.4.4.1 Sample Input
+items = [
+    ("Item 1", 10, 60),
+    ("Item 2", 20, 100),
+    ("Item 3", 30, 120)
+]
+capacity = 50
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\begin{verbatim}
+items = [
+    ("Item 1", 10, 60),
+    ("Item 2", 20, 100),
+    ("Item 3", 30, 120)
+]
+
+capacity = 50
+\end{verbatim}
+
+\subsubsection*{Step-by-Step Process}
+\begin{itemize}
+    \item Initialize variables:
+    \begin{itemize}
+        \item \texttt{best\_subset = []}
+        \item \texttt{best\_value = 0}
+        \item \texttt{all\_valid\_subsets = []}
+    \end{itemize}
+
+    \item Enumerate all subsets ($2^3 = 8$ possibilities):
+    \begin{description}
+        \item[Empty set (i=0):] weight = 0, value = 0 \\
+        Valid, add to \texttt{all\_valid\_subsets}
+        
+        \item[\{Item 1\} (i=1):] weight = 10, value = 60 \\
+        Valid, add to \texttt{all\_valid\_subsets} \\
+        Better than current best, update \texttt{best\_subset} and \texttt{best\_value}
+        
+        \item[\{Item 2\} (i=2):] weight = 20, value = 100 \\
+        Valid, add to \texttt{all\_valid\_subsets} \\
+        Better than current best, update \texttt{best\_subset} and \texttt{best\_value}
+        
+        \item[\{Item 1, Item 2\} (i=3):] weight = 30, value = 160 \\
+        Valid, add to \texttt{all\_valid\_subsets} \\
+        Better than current best, update \texttt{best\_subset} and \texttt{best\_value}
+        
+        \item[\{Item 3\} (i=4):] weight = 30, value = 120 \\
+        Valid, add to \texttt{all\_valid\_subsets} \\
+        Not better than current best
+        
+        \item[\{Item 1, Item 3\} (i=5):] weight = 40, value = 180 \\
+        Valid, add to \texttt{all\_valid\_subsets} \\
+        Better than current best, update \texttt{best\_subset} and \texttt{best\_value}
+        
+        \item[\{Item 2, Item 3\} (i=6):] weight = 50, value = 220 \\
+        Valid, add to \texttt{all\_valid\_subsets} \\
+        Better than current best, update \texttt{best\_subset} and \texttt{best\_value}
+        
+        \item[\{Item 1, Item 2, Item 3\} (i=7):] weight = 60, value = 280 \\
+        Invalid (exceeds capacity), skip
+    \end{description}
+\end{itemize}
+
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item Best subset: \texttt{["Item 2", "Item 3"]}
+    \item Best value: \texttt{220}
+    \item All valid subsets:
+    \begin{verbatim}
+([], 0, 0)
+(["Item 1"], 10, 60)
+(["Item 2"], 20, 100)
+(["Item 1", "Item 2"], 30, 160)
+(["Item 3"], 30, 120)
+(["Item 1", "Item 3"], 40, 180)
+(["Item 2", "Item 3"], 50, 220)
+    \end{verbatim}
+\end{itemize}
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+The implementation uses a bit manipulation technique to systematically generate all $2^n$ possible subsets of $n$ items. For each subset:
+\begin{itemize}
+    \item Calculate the total weight and value.
+    \item Check if the subset is valid (i.e., weight $\leq$ capacity).
+    \item If valid, add it to the list of valid subsets.
+    \item If it has a higher value than the current best, update the best solution.
+\end{itemize}
+
+This approach guarantees finding the optimal solution since it examines every possible combination. The bit manipulation efficiently encodes which items are included in each subset, representing each subset as an integer where each bit indicates the presence or absence of an item.
+\subsubsection*{Possible Improvements / Future Work}
+\begin{itemize}
+    \item \textbf{Early termination:} Add logic to break out of loops early when certain conditions are met.
+    \item \textbf{Sorting optimization:} Pre-sort items by value-to-weight ratio to potentially find better solutions earlier.
+    \item \textbf{Memory optimization:} Store only necessary information for valid subsets instead of complete details.
+    \item \textbf{Parallel processing:} Divide the search space among multiple processors for faster execution on large inputs.
+    \item \textbf{Hybrid approach:} Combine with heuristic methods to handle larger instances more efficiently.
+\end{itemize}
+
+
+
+
+
+
+
+\clearpage
+\section{Analysis of Time Complexity}
+\subsection{Selection Sort}
+Iteratively selects the minimum element from the unsorted portion and swaps it with the beginning element.\newline
+\newline
+\textbf{Best Case:} O(n²) - Occurs when the array provided is already sorted \newline
+\textbf{Average Case:} O(n²) - Arises when the elements in the array are in a random order \newline
+\textbf{Worst Case:} O(n²) - Occurs when the array must be in ascending order, but the array is in descending order or vice versa
+
+\begin{verbatim}
+for i in range(len(arr)):               
+    intMinIndex  = i                    
+    for j in range(i + 1, len(arr)):    
+        a = arr[j].lower() if isinstance(arr[j], str) else arr[j]
+        b = arr[intMinIndex].lower() if isinstance(arr[intMinIndex], str) else arr[intMinIndex]
+        if a < b:
+            intMinIndex = j
+    if intMinIndex != i:
+        arr[i], arr[intMinIndex] = arr[intMinIndex], arr[i]
+return arr
+\end{verbatim}
+
+Calculate the Time Complexity of each Operation
+\begin{align*}
+    &\text{} Line 1:  1 + n = n  \\
+    &\text{} Line 2: 1  \\
+    &\text{} Line 3: n * n = n² \\
+    &\text{} Line 4, Line 5:  1 \\
+    &\text{} Line 7, Line 8: 1 \\
+    &\text{} Line 9, Line 10: 1 
+\end{align*}
+
+Add up all the Big O of each Operation
+\begin{align*}
+    &\text{} = n + 1 + n² + 1 + 1 + 1   \\
+    &\text{} = n² + n + 4 
+\end{align*}
+
+Remove Constant, Choose the Higher Order Term
+\begin{align*}
+    &\text{} = n² \\
+    &\text{} = \textbf{O(n²) }
+\end{align*}
+
+
+\subsection{Bubble Sort}
+Repeatedly swaps the adjacent elements if they are in the wrong position.\\
+\\
+\textbf{Best Case:} O(n) - Occurs when the array is already sorted\\
+\textbf{Average Case:} O(n²) - Arises when the array is in a random or irrespective arrangement of elements\\
+\textbf{Worst Case:} O(n²) - Occurs when the array must be in ascending order but the array is in descending order or vice versa\\
+
+\begin{verbatim}
+for i in range(intSize): 
+    for j in range(0, intSize - i - 1):
+        if listInput[j] > listInput[j+1]:
+            listInput[j], listInput[j+1] = listInput[j+1], listInput[j]
+\end{verbatim}
+
+Calculate the Time Complexity of each Operation
+\begin{align*}
+    &\text{} Line 1: 1  \\
+    &\text{} Line 2: 1 + n = n  \\
+    &\text{} Line 3: n * n = n²  \\
+    &\text{} Line 4: n² \\
+    &\text{} Line 5: n²
+\end{align*}
+
+Add up all the Big O of each Operation
+\begin{align*}
+    &\text{} = 1 + 1 + n + n² + n² + n² \\
+    &\text{} = 3n² + n + 2
+\end{align*}
+
+Remove Constant, Choose the Higher Order Term
+\begin{align*}
+    &\text{} = n² + n + 2\\
+    &\text{} = n² \\
+    &\text{} = \textbf{O(n²)}
+\end{align*}
+
+
+\subsection{Sequential Search}
+Iterates through the dataset and checks whether the target value exists.\\
+\\
+\textbf{Best Case:} O(1) - If the target value is at the beginning of the array\\
+\textbf{Average Case:} O(n) - Arises when the target value is in a random placement or in the middle of the array\\
+\textbf{Worst Case:} O(n) - Occurs when the target value is in the last index of the array
+
+\begin{verbatim}
+def search(arrArray, intTarget):
+    for i in range(len(arrArray)):
+        if arrArray[i] == intTarget:
+            return True
+    return False
+\end{verbatim}
+
+Calculate the Time Complexity of each Operation
+\begin{align*}
+    &\text{} Line 2: 1 + n = n  \\
+    &\text{} Line 3: 1 * n = n  \\
+    &\text{} Line 4: 1 \\
+    &\text{} Line 5: 1
+\end{align*}
+
+Add up all the Big O of each Operation
+\begin{align*}
+    &\text{} = n + n + 1 + 1  \\
+    &\text{} = 2n + 2
+\end{align*}
+
+Remove Constant, Choose the Higher Order Term
+\begin{align*}
+    &\text{} = n \\
+    &\text{} = \textbf{O(n)}
+\end{align*}
+
+\subsection{Traveling Salesman Problem}
+Recursively finds the shortest path possible route that visits each city exactly once and returns to the origin city. \\
+\\
+The given must be a complete graph wherein each vertex must be connected to every other vertex. Brute force approach generate all the permutations of each node then calculate cost of each permutation and select the minimum cost among the permutations. \\
+\\
+\textbf{Best Case:} O(n!) - Factorial \\
+\textbf{Average Case:} O(n!) - Factorial \\
+\textbf{Worst Case}: O(n!) - Factorial \\
+
+Formula in finding the number of combinations in the traveling salesman problem.
+\begin{align*}
+    &\text{} = (n - 1)!
+\end{align*}
+
+For example:
+\begin{align*}
+    &\text{} n = 5
+\end{align*}
+
+Where n is the number of vertices or cities in the graph since, the algorithm utilizes combination to generate all all the possible permutations in the vertex set.
+\begin{align*}
+    &\text{} = (5 - 1)!\\
+    &\text{} = (4)!\\
+    &\text{} = 4 * 3 * 2 * 1\\
+    &\text{} = 24 {\ possible \ combinations}\\
+\end{align*}
+
+To get the time complexity, we just need to remove the constant and get the higher order term.
+\begin{align*}
+    &\text{} = (n - 1)!\\
+    &\text{} = (n)!\\
+    &\text{} = \textbf{O(n!)}\\
+\end{align*}
+
+
+\subsection{Knapsack Problem}
+Given n items where each item has an equivalent weight and value, and a capacity, find the most valuable subset of the items that can fit into the knapsack.\\
+\\
+\textbf{Best Case:} \(O(2^n)\) - Exponential time\\
+\textbf{Average Case:} \(O(2^n)\) - Exponential time\\
+\textbf{Worst Case:} \(O(2^n)\) — Exponential time, the combinations are checked recursively. The number of computations doubles for each extra item that needs to be considered.\\
+
+Given: 
+\begin{align*}
+    &\text{} n = item\\
+    &\text{} w[i] = weight \ of \ the \ item \\
+    &\text{} v[i] = value \ of\  the \ item \\
+    &\text{} w = knapsack \ capacity 
+\end{align*}
+
+Using the brute-force approach, we must try all the possible subsets of n. Each item has a chance to be included or excluded from the knapsack.\\
+
+The formula to find the number of combinations:
+\begin{align*}
+    &\text{} = 2^n - 1\\
+\end{align*}
+
+To get the time complexity, we just need to remove the constant and get the higher order term.
+\begin{align*}
+    &\text{} = 2^n\\
+    &\text{} = \textbf{O(\(2^n\))}\\
+\end{align*}
+
+
+
+
+
+
+
+\clearpage
+\section{Algorithms Comparison}
+\begin{longtable}{|p{2.5cm}|p{4.3cm}|p{4.3cm}|p{4.cm}|}
+\hline
+\textbf{Algorithm} & \textbf{Strengths} & \textbf{Weaknesses} & \textbf{Real-World \newline Applications} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Algorithm} & \textbf{Strengths} & \textbf{Weaknesses} & \textbf{Real-World Applications} \\
+\hline
+\endhead
+
+Selection Sort &
+\begin{itemize}
+\itemindent=-13pt
+\item Simple to implement and easy to understand
+\item Suits well with a small dataset 
+\item Requires only a constant memory space 
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Inefficient on large data sets 
+\item Does not maintain the relative order of equal element which makes it unstable 
+\item Does not adapt well with a partially sorted dataset 
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Small leader-board ranking in a game
+\item Organizing of book IDs in a small Library
+\item Embedded system with limited memory 
+\item Sorting a partially sorted dataset
+\item Education and algorithm analysis
+\end{itemize}
+\\
+\hline
+
+Bubble Sort &
+\begin{itemize}
+\itemindent=-13pt
+\item Easy to grasp and the most common sorting algorithm to implement
+\item Stable sorting which preserves the relative order of equal element 
+\item Does not require additional memory  
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Inefficient on large datasets 
+\item Involves many swaps that can be particularly costly memory access is slow 
+\item Poor scalability  
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Sorting a music playlist by name 
+\item Sorting animation through visual demo 
+\item Rearranging of employees based on their salary 
+\item Re-ordering of a to-do list items alphabetically 
+\item Rearranging of high-scores in a simple game
+\end{itemize}
+\\
+\hline
+
+Sequential Search &
+\begin{itemize}
+\itemindent=-13pt
+\item Works on any unsorted dataset 
+\item Simple to implement and understand
+\item Does not require additional memory 
+\item Easy to debug
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Inefficient on large datasets
+\item Lack of early termination process 
+\item Slow method as it must check every element sequentially
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Contact number searching in a list 
+\item Keyword searching a text application 
+\item Finding a file in a file-system 
+\item Record lookup in a registry
+\item Searching for a specific item using the search tab
+\end{itemize}
+\\
+\hline
+
+Traveling Salesman Problem (TSP) &
+\begin{itemize}
+\itemindent=-13pt
+\item Simple concept to understand
+\item Simulates real-world model of routing/optimization
+\item Guarantees the optimal solution. 
+\item Suitable for a small graph size.
+\item Wide application and benchmark for algorithm development
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item NP-hard: high computational complexity 
+\item Exponential Time
+\item Difficult to implement heuristics  
+\item No known efficient general solution 
+\item Excessive memory and CPU usage 
+\item Poor scalability and flexibility
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Robot Routing and Automation 
+\item Tour Planning Application
+\item Telecommunications and Network Design
+\item Circuit Board Design 
+\item Delivery Route Optimization
+\end{itemize}
+\\
+\hline
+
+Knapsack Problem &
+\begin{itemize}
+\itemindent=-13pt
+\item Straightforward Solution 
+\item Useful in decision making
+\item Has an optimized versions such as dynamic programming and Greedy algorithm
+\item Examines every possible combination which guarantees the optimal result
+\item Produces consistent results
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item NP-complete: Exponential Time
+\item Computationally expensive when dealing with large amounts of data
+\item Difficult to scale using Heuristics
+\item Exhaustive in finding the combination of objects that satisfies the weight while maximizing its worth
+\end{itemize}
+&
+\begin{itemize}
+\itemindent=-13pt
+\item Investment Portfolio Optimization
+\item Cargo Warehouse Management
+\item Cloud Resource Allocation
+\item Inventory Management in Games
+\item Healthcare Scheduling 
+\end{itemize}
+\\ 
+\hline
+
+\end{longtable}
+
+
+\clearpage
+\section{Optimization Techniques}
+\subsection{Optimized Bubble Sort (Cocktail Shaker Sort)}
+\subsubsection*{Brief Description}
+Cocktail Shaker Sort is an optimized version of Bubble Sort that traverses and sort the array in both directions alternatively. It does not go through the unnecessary iteration making it efficient for large arrays. This bidirectional approach helps detect sorted portions faster.
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+Start
+    - Accept array (arrInput), boolean (boolAscending), and boolean (boolIsNumbers) to determine sorting order and data type.
+        - Initialize the size of the array (intSize)
+        - Initialize the variable to store the steps (listSteps)
+        - Initialize intStart as 0 (starting index)
+        - Initialize intEnd as intSize - 1 (last index)
+        - Initialize a flag (swapped) as True to track if any swap occurred
+
+        - If boolIsNumbers is false
+              - Convert all elements in the array to string
+
+        - If boolAscending is true
+            - While boolSwapped is true
+
+            - Set boolSwapped to false
+            
+                - Loop i from intStart to intEnd
+                    - If element at index[i] is greater than element at index[i+1]
+                        - Swap the two elements
+                        - Set boolSwapped to true
+                        - append a copy of listInput to listSteps
+                - If boolSwapped is false then exit loop
+                - Set boolSwapped to false
+                - Decrease intEnd by 1
+
+                - Loop i from intEnd - 1 to intStart (reverse order)
+                    - If element at index i is greater than element at index i+1
+                        - Swap the two elements
+                        - Set boolSwapped to true
+                        - append a copy of listInput to listSteps
+                - Increase intStart by 1
+        
+        - else if boolAscending is false
+            proceed to do the same process however instead of using index[i] is greater than index[i + 1], we will use index[i] is less than index[i + 1]. Then it will proceed to sort the list in descending order.
+
+        Return variables listInput, listSteps
+End
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def optimizedBubbleSort(listInput, ascending=True, isNumbers=True):
+    """
+
+    Description:
+        Optimized Bubble Sort Algorithm (Cocktail Shaker Sort) 
+            A sorting algorithm that traverses through a given array in both 
+            directions alternatively which is also known as Cocktail Shaker Sort.
+
+    Parameters:
+        listInput (list): The list to be sorted.
+        ascending (bool): Sort in ascending as default, otherwise sort in descending.
+        isNumbers (bool): Check if the list is of numbers or letters.
+
+    Returns: 
+        The sorted list (listInput).
+
+    References:
+        https://www.geeksforgeeks.org/cocktail-sort/
+        
+    """ 
+
+    #listSteps is a variable that stores the steps of the sorting process
+    listSteps = []
+
+    #variable intSize is the length of the list
+    intSize = len(listInput) 
+
+    #variable start indicates the starting index of the list
+    intStart = 0 
+
+    #variable end indicates the last index of the list
+    intEnd = intSize - 1
+
+    #indicates whether a swap has occurred
+    swapped = True 
+
+    #check if the list is of numbers or letters
+    if not isNumbers:
+        for i in range(intSize):
+            #convert the elements to string
+            listInput[i] = str(listInput[i])
+    
+    # Conditional statement for ascending order
+    if ascending:
+        #iterate until no swaps occur
+        while swapped:
+
+            #set swapped to false
+            swapped = False
+
+            #loop through the list from start to end
+            for i in range(intStart, intEnd):
+
+                #compare adjacent elements from start to end
+                if listInput[i] > listInput[i + 1]:
+
+                    #swap if they are not in the correct order
+                    listInput[i], listInput[i + 1] = listInput[i + 1], listInput[i]
+
+                    #set swapped to true
+                    swapped = True
+
+                    #store the steps in the listSteps variable
+                    listSteps.append(listInput.copy())
+            
+            #if no swaps occurred, break the loop
+            if not swapped:
+                break
+
+            #set swapped to false
+            swapped = False
+
+            #loop through the list from end to start
+            intEnd -= 1
+
+            #compare adjacent elements from end to start
+            for i in range(intEnd - 1, intStart - 1, -1):
+
+                #compare adjacent elements from end to start
+                if listInput[i] > listInput[i + 1]:
+
+                    #swap if they are not in the correct order
+                    listInput[i], listInput[i + 1] = listInput[i + 1], listInput[i]
+
+                    #set swapped to true
+                    swapped = True
+
+                    #store the steps in the listSteps variable
+                    listSteps.append(listInput.copy())
+            
+            #if no swaps occurred, break the loop
+            intStart += 1
+    
+    # Conditional statement for descending order
+    else:
+        while swapped:
+            swapped = False
+            for i in range(intStart, intEnd):
+                if listInput[i] < listInput[i + 1]:
+                    listInput[i], listInput[i + 1] = listInput[i + 1], listInput[i]
+                    swapped = True
+                    listSteps.append(listInput.copy())
+            if not swapped:
+                break
+            swapped = False
+            intEnd -= 1
+            for i in range(intEnd - 1, intStart - 1, -1):
+                if listInput[i] < listInput[i + 1]:
+                    listInput[i], listInput[i + 1] = listInput[i + 1], listInput[i]
+                    swapped = True
+                    listSteps.append(listInput.copy())
+            intStart += 1
+
+    #return the sorted list and the steps list
+    return listInput, listSteps
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\begin{itemize}
+    \item \texttt{arrInput = [37, 98, 5, 12, 9]}
+    \item \texttt{boolAscending = true}
+    \item \texttt{isNumbers = true}
+\end{itemize}
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item Start First Forward Pass
+
+    \item Compare 3 and 50
+    \begin{description}
+        \item \(3 < 50\), no swap needed
+    \end{description}
+
+    \item Compare 50 and 1
+    \begin{description}
+        \item \(50 > 1\), swap their position
+        \item[New array:] \texttt{[3, 1, 50, 40, 2]}
+    \end{description}
+
+    \item Compare 50 and 40
+    \begin{description}
+        \item \(50 > 40\), swap their position
+        \item[New array:] \texttt{[3, 1, 40, 50, 2]}
+    \end{description}
+
+    \item Compare 50 and 2
+    \begin{description}
+        \item \(50 > 2\), swap their position
+        \item[New array:] \texttt{[3, 1, 40, 2, 50]}
+    \end{description}
+
+    \item End of Forward Pass
+
+    \item Start First Backward Pass
+
+    \item Compare 2 and 40
+    \begin{description}
+        \item \(2 < 40\), swap their position
+        \item[New array:] \texttt{[3, 1, 2, 40, 50]}
+    \end{description}
+
+    \item Compare 2 and 1
+    \begin{description}
+        \item \(2 > 1\), no swap needed
+    \end{description}
+
+    \item Compare 1 and 3
+    \begin{description}
+        \item \(1 < 3\), swap their position
+        \item[New array:] \texttt{[1, 3, 2, 40, 50]}
+    \end{description}
+
+    \item End of Backward Pass
+
+    \item Start Second Forward Pass
+
+    \item Compare 3 and 2
+    \begin{description}
+        \item \(3 > 2\), swap their position
+        \item[New array:] \texttt{[1, 2, 3, 40, 50]}
+    \end{description}
+
+    \item Compare 3 and 40
+    \begin{description}
+        \item \(3 < 40\), no swap needed
+    \end{description}
+
+    \item Compare 40 and 50
+    \begin{description}
+        \item \(40 < 50\), no swap needed
+    \end{description}
+
+    \item End of Forward Pass
+
+    \item Start Second Backward Pass
+
+    \item Compare 40 and 3
+    \begin{description}
+        \item \(40 > 3\), no swap needed
+    \end{description}
+
+    \item Compare 3 and 2
+    \begin{description}
+        \item \(3 > 2\), no swap needed
+    \end{description}
+
+    \item Compare 2 and 1
+    \begin{description}
+        \item \(2 > 1\), no swap needed
+    \end{description}
+
+    \item End of Backward Pass
+\end{enumerate}
+
+
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item Step 1: \texttt{[3, 1, 50, 40, 2]}
+    \item Step 2: \texttt{[3, 1, 40, 50, 2]}
+    \item Step 3: \texttt{[3, 1, 40, 2, 50]}
+    \item Step 4: \texttt{[3, 1, 2, 40, 50]}
+    \item Step 5: \texttt{[1, 3, 2, 40, 50]}
+    \item Step 6: \texttt{[1, 2, 3, 40, 50]}
+    \item Sorted List: \texttt{[5, 9, 12, 37, 98]}
+\end{itemize}
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+The function accepts a list from the user along with a setting to determine whether the output should be in ascending or descending order. A checker for whether the input is an integer or letter is also added in the function. A \texttt{while} loop is used as the outer loop to keep the sorting going until the list is sorted. Inside the \texttt{while} loop, there are two \texttt{for} loops: the first is for the traditional style of bubble sort, and the second is the reverse. Reverse means the swapping starts at the end of the list and after that, it returns to the traditional style. This approach continues until a full cycle goes by without any swaps.
+
+\subsubsection*{Possible Improvements / Future Work}
+A minor improvement would be displaying the process of ascending and descending side by side automatically for comparisons and to avoid asking the user whether it should be sorted in ascending or descending order. Another simple improvement is to add a description if the swap made is from the start or from the end to make it much easier to debug and understand.
+
+% \hrulefill
+
+%OPT BUBBLE SORT 2
+\subsection{Comb Sort (Optimized Bubble Sort)}
+\subsubsection*{Brief Description}
+Comb Sort is an improvement over Bubble Sort that eliminates small values near the end of the list, known as "turtles," by comparing and swapping elements at a certain gap apart. The gap starts large and shrinks by a shrink factor (commonly 1.3) each pass, allowing faster movement of elements towards their correct positions. This approach significantly improves performance over Bubble Sort, especially for larger lists, while maintaining simplicity and ease of implementation.
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+    FUNCTION comb_sort(intArray, ascending):
+    
+        DEFINE gap to len(intArray) / 1.3
+
+        WHILE gap > 0:
+            SEARCH through array in range(length - gap)
+                IF ascending AND array[i] > array[i + gap]:
+                    SWAP array[i] and array[i + gap] 
+                IF descending AND array[i] < array[i + gap]:
+                    SWAP array[i] and array[i + gap]
+            
+            UPDATE gap = gap/1.3
+            ADD array in steps
+
+        RETURN the sorted array and steps showing the array update per cycle
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def comb_sort(intArr, ascending):
+    """
+        This algorithm use the known bubble sort algorithm, but instead of comparing the adjacent pairs it repeatedly sort pairs of element that are a certain gap apart. This gap starts as the length of the list and is continuously reduced by diving it to 1.3 at each cycle. 
+
+    Reference:
+        https://www.tutorchase.com/answers/a-level/computer-science/how-does-the-comb-sort-algorithm-work
+        https://www.geeksforgeeks.org/comb-sort/
+
+    Arguments:
+        intArray (list): The list of integers to be sorted
+        ascending (boolean): The list is ascending if True
+
+    Return:
+        list: The sorted list in ascending order
+        list of lists: The order of array in each step
+
+    Example:
+        >>>bidirectional_enhanced_selection_sort([64, 34, 25, 12, 22, 11, 90])
+        [11, 12, 22, 25, 34, 64, 90]
+    """
+
+    #variables
+    intLength = len(intArr)
+    intGap = int(len(intArr) / 1.3)
+    steps = []
+
+    #loop through array
+    while intGap > 0:
+        for i in range(intLength - intGap):
+            if(ascending):
+                if(intArr[i] > intArr[i + intGap]):
+                    intTemporaryContainer = intArr[i]
+                    intArr[i] = intArr[i + intGap]
+                    intArr[i + intGap] = intTemporaryContainer
+            else:
+                if(intArr[i] < intArr[i + intGap]):
+                    intTemporaryContainer = intArr[i]
+                    intArr[i] = intArr[i + intGap]
+                    intArr[i + intGap] = intTemporaryContainer
+
+        intGap = int(intGap/1.3)
+        steps.append(intArr[:])
+
+    return intArr, steps
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\texttt{[64, 34, 25, 12, 22, 11, 90]}
+
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item Define the gap: \(\text{gap} = \frac{\text{length}}{1.3} = 5\)
+    
+    \item Loop through array in range \(\text{length} - \text{gap}\):
+    \begin{itemize}
+        \item If \texttt{array[i] > array[i + gap]}, swap their positions
+        \item Example: \texttt{[11, 34, 25, 12, 22, 64, 90]}
+    \end{itemize}
+
+    \item Update gap: \(\text{gap} = \frac{\text{gap}}{1.3}\)
+
+    \item Add array to steps
+
+    \item Continue until \(\text{gap} < 1\)
+\end{enumerate}
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item \textbf{Sorted array:} \texttt{[11, 12, 22, 25, 34, 64, 90]}
+    
+    \item \textbf{Steps:} 
+    \begin{itemize}
+        \item \texttt{[11, 34, 25, 12, 22, 64, 90]}
+        \item \texttt{[11, 22, 25, 12, 34, 64, 90]}
+        \item \texttt{[11, 12, 25, 22, 34, 64, 90]}
+        \item \texttt{[11, 12, 22, 25, 34, 64, 90]}
+    \end{itemize}
+\end{itemize}
+
+%\hrulefill
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item The main logic improves Bubble Sort by introducing a gap between compared elements, allowing the algorithm to move small values ("turtles") towards the beginning more efficiently.
+    
+    \item The gap starts as the array length divided by a shrink factor (commonly 1.3), and is reduced in each iteration, gradually approaching a standard Bubble Sort as the gap reaches 1.
+    
+    \item In each pass, elements that are a "gap" apart are compared and swapped if out of order, depending on the desired sorting direction.
+    
+    \item This approach significantly reduces comparisons and swaps, especially for lists with small values near the end, giving better performance than Bubble Sort while staying simple and easy to understand.
+\end{itemize}
+\subsubsection*{Possible Improvements / Future Work}
+\begin{itemize}
+    \item \textbf{Optimize shrinking:} Implement the best shrink factor depending on the input data for improved performance.
+    \item \textbf{Sort Checker:} Add functionality to allow early termination if the array is already sorted.
+\end{itemize}
+
+
+%OPT 
+\subsection{Bidirectional enhanced selection sort (optimized of selection sort)}
+\subsubsection*{Brief Description}
+The Bidirectional Enhanced Selection Sort algorithm improves upon traditional selection sort by simultaneously finding the minimum and maximum elements in each iteration, reducing the number of passes required to sort the array. It uses a bidirectional approach to sort the array from both ends, optimizing performance and minimizing redundant comparisons by moving the search base on the top of stacks. The algorithm is particularly useful for educational purposes and scenarios where simplicity and clarity are prioritized.
+
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+    FUNCTION bidirectional_enhanced_selection_sort(intArray, ascending):
+    
+        WHILE intFront < intEnd:
+            FIND high value(ascending)/low value(descending) element in the range [intFront, intEnd]
+                IF new high value(ascending)/low value(descending) found
+                    SWAP previous high value(ascending)/low value(descending) to the preceding new high value(ascending)/low value(descending)
+                    PUT the location of previous high value(ascending)/low value(descending) to the stackMax/stackMin
+            SWAP high value(ascending)/low value(descending) to the intEnd - 1
+            
+            UPDATE intEnd-- to norrow the range
+
+            FIND low value(descending)/high value(descending) element in the range [intFront, intEnd]
+                IF new low value found
+                    SWAP previous low value(descending)/high value(descending) to the preceding new low value(descending)/high value(descending)
+                    PUT the location of previous low value(descending)/high value(descending) to the stackMin/stackMax
+
+            SWAP low value(descending)/high value(descending) to the intFront
+
+            ADD updated array to steps
+            
+            UPDATE intFront++ to norrow the range
+
+            IF stackMax.pop() and stackMin.pop() is TRUE
+                UPDATE high value to stackMax.pop()
+                UPDATE low value to stackMin.pop()
+
+                IF stackMax.pop and stackMin.pop() is EQUAL
+                    BREAK
+
+            ELSE
+                IF NO SWAP performed
+                    BREAK
+                
+                UPDATE high value to intFront
+                UPDATE low value to intEnd
+                CONTINUE
+        
+        RETURN the sorted array and steps showing the array update per cycle
+    
+
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def bidirectional_enhanced_selection_sort(intArray, ascending):
+    """
+    This function use the advantage of applying the selection sort algorithm bidirectionally (from left to right & right to left in one iteration), swapping the previous maximum/minimum to the location before the new maximum/minimum, storing the new location of previous maximum/minimum to the stack, and once there's no new maximum/minimum, then the current maximum/minimum will be place to its correct position. To continue, the previous maximum/minimum in the stack will be use as the starting point for the next iteration and will repeat the process until the array is sorted. And Finally, the sorting will stop when there is no swapped performed and empty stack or the stack pop of both are equal, or the front search is greater than the end search and the end search is less than the front search.
+    
+    Reference:
+        https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828471
+        
+    Arguments:
+        intArray (list): The list of integers to be sorted
+        ascending (boolean): The list is ascending if True
+
+    Return:
+        list: The sorted list in ascending order
+        list of lists: The order of array in each step
+
+    Example:
+        >>>bidirectional_enhanced_selection_sort([64, 34, 25, 12, 22, 11, 90])
+        [11, 12, 22, 25, 34, 64, 90]
+    """
+
+    #variables
+    stackMaxLocation = []
+    stackMinLocation = []
+    intEnd = len(intArray)
+    intFront = 0
+    intMaxBegin = 0
+    intCurrentMax = 0
+    intCurrentMin = intEnd - 2
+    steps = []
+
+    #loop through the array
+    while intFront<intEnd and intEnd>intFront:
+
+        #loop from left to right (sort the large value)
+        for i in range(intCurrentMax, intEnd):
+
+            if(ascending):
+                if(intArray[intCurrentMax] < intArray[i]):
+                    intTemporaryContainer = intArray[intCurrentMax]
+                    intArray[intCurrentMax] = intArray[i - 1]
+                    intArray[i - 1] = intTemporaryContainer
+
+                    stackMaxLocation.append(i - 1)
+
+                    intCurrentMax = i
+            else:
+                if(intArray[intCurrentMax] > intArray[i]):
+                    intTemporaryContainer = intArray[intCurrentMax]
+                    intArray[intCurrentMax] = intArray[i - 1]
+                    intArray[i - 1] = intTemporaryContainer
+
+                    stackMaxLocation.append(i - 1)
+
+                    intCurrentMax = i
+
+        
+        intTemporaryContainer = intArray[intCurrentMax]
+        intArray[intCurrentMax] = intArray[intEnd - 1]
+        intArray[intEnd - 1] = intTemporaryContainer
+
+        intEnd -= 1
+
+        #loop from right to left (sort the small value)
+        for j in range(intCurrentMin, intFront - 1, -1):
+            if(ascending):
+                if(intArray[intCurrentMin] > intArray[j]):
+                    intTemporaryContainer = intArray[intCurrentMin]
+                    intArray[intCurrentMin] = intArray[j + 1]
+                    intArray[j + 1] = intTemporaryContainer
+
+                    stackMinLocation.append(j + 1)
+
+                    intCurrentMin = j
+            else:
+                if(intArray[intCurrentMin] < intArray[j]):
+                    intTemporaryContainer = intArray[intCurrentMin]
+                    intArray[intCurrentMin] = intArray[j + 1]
+                    intArray[j + 1] = intTemporaryContainer
+
+                    stackMinLocation.append(j + 1)
+
+                    intCurrentMin = j
+
+
+        intTemporaryContainer = intArray[intCurrentMin]
+        intArray[intCurrentMin] = intArray[intFront]
+        intArray[intFront] = intTemporaryContainer
+
+        intFront += 1
+
+        steps.append(intArray[:])
+
+        try:
+            intCurrentMax = stackMaxLocation.pop()
+            intCurrentMin = stackMinLocation.pop()
+
+            if(intCurrentMax == intCurrentMin):
+                break
+
+        except IndexError:
+            intCurrentMax = intFront
+            intCurrentMin = intEnd
+            continue
+
+    return intArray, steps
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\texttt{[64, 34, 25, 12, 22, 11, 90]}
+
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item Loop through the array from left to right and find the highest value:
+    \begin{itemize}
+        \item Current highest value = 64,\quad Next highest value = 90
+        \item \texttt{[11, 34, 25, 12, 22, 64, 90]}
+        \item Current highest value = 90,\quad \texttt{stackMax = 5} (location of the previous highest value)
+    \end{itemize}
+
+    \item Swap current highest value to the \texttt{intEnd} of the array:
+    \begin{itemize}
+        \item \texttt{[11, 34, 25, 12, 22, 64, 90]}
+    \end{itemize}
+
+    \item Loop through the array from right to left and find the lowest value:
+    \begin{itemize}
+        \item Current lowest value = 64,\quad Next lowest value = 22
+        \item \texttt{[11, 34, 25, 12, 22, 64, 90]}
+        \item Current lowest value = 22,\quad \texttt{stackMin = 5} (location of previous lowest value),\quad Next lowest = 12
+        \item \texttt{[11, 34, 25, 12, 22, 64, 90]}
+        \item Current lowest value = 12,\quad \texttt{stackMin = 5, 4},\quad Next lowest = 11
+        \item \texttt{[11, 12, 25, 34, 22, 64, 90]}
+    \end{itemize}
+
+    \item Swap current lowest value to the \texttt{intFront} of the array:
+    \begin{itemize}
+        \item \texttt{[11, 12, 25, 34, 22, 64, 90]}
+    \end{itemize}
+
+    \item Add the array to steps
+
+    \item Update:
+    \begin{itemize}
+        \item \texttt{current highest value = stackMax.pop()} \(\rightarrow\) [5]
+        \item \texttt{current lowest value = stackMin.pop()} \(\rightarrow\) [4]
+    \end{itemize}
+
+    \item Shrink the range of looping:
+    \begin{itemize}
+        \item \texttt{intFront++}, \quad \texttt{intEnd--}
+    \end{itemize}
+
+    \item Repeat from step 1 with updated range and continue from:
+    \begin{itemize}
+        \item Current highest value (left to right)
+        \item Current lowest value (right to left)
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item \textbf{Sorted array:} \texttt{[11, 12, 22, 25, 34, 64, 90]}
+    \item \textbf{Steps:}
+    \begin{itemize}
+        \item \texttt{[11, 12, 25, 34, 22, 64, 90]}
+        \item \texttt{[11, 12, 25, 34, 22, 64, 90]}
+        \item \texttt{[11, 12, 22, 25, 34, 64, 90]}
+        \item \texttt{[11, 12, 22, 25, 34, 64, 90]}
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item This sorting algorithm enhances traditional Selection Sort by selecting both minimum and maximum values in each iteration, allowing for simultaneous sorting from both ends of the array.
+    \item It efficiently moves previously identified high and low values closer to their final positions.
+    \item Stacks are used to track positions of previously found minimum and maximum values, enabling the algorithm to resume correctly in the next iteration.
+    \item This structure reduces redundant comparisons and improves overall performance.
+\end{itemize}
+\subsubsection*{Possible Improvements / Future Work}
+\begin{itemize}
+    \item \textbf{Unnecessary Swapping:} The algorithm may perform redundant swaps when elements are already in their correct positions.
+    \item \textbf{Improve the Implementation:} The current implementation is complex and could be further simplified for clarity and efficiency.
+\end{itemize}
+
+%OPT SELECTION SORT
+\subsection{Optimized Selection Sort}
+\subsubsection*{Brief Description}
+This optimized version of Selection Sort iteratively finds the minimum (or maximum) element in the unsorted portion of the list and swaps it with the first unsorted element — but only if a smaller (or larger) value is found. It avoids unnecessary swaps, making it more efficient in practice. It supports both numeric and case-insensitive string comparisons and maintains the original list by working on a copy.
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+FUNCTION optimizedSelectionSort(listInput, ascending = True):
+    SET n = length of listInput
+    SET arr_copy = copy of listInput
+
+    FOR i FROM 0 TO n - 1:
+        SET min_index = i
+        SET current_val = lower(arr_copy[i]) IF string ELSE arr_copy[i]
+
+        FOR j FROM i+1 TO n - 1:
+            SET comp_val = lower(arr_copy[j]) IF string ELSE arr_copy[j]
+
+            IF ascending AND comp_val < current_val:
+                SET min_index = j
+                SET current_val = comp_val
+            ELSE IF NOT ascending AND comp_val > current_val:
+                SET min_index = j
+                SET current_val = comp_val
+
+        IF min_index != i:
+            SWAP arr_copy[i] WITH arr_copy[min_index]
+
+    RETURN arr_copy
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def optimizedSelectionSort(listInput, ascending=True):
+    """
+    Optimized Selection Sort Algorithm:
+        A sorting algorithm that repeatedly finds the minimum (or maximum) element 
+        from the unsorted part and swaps it with the first unsorted element. 
+        This optimized version swaps only when a new minimum (or maximum) is found.
+
+    Parameters:
+        listInput (list): The list to be sorted (numbers or strings).
+        ascending (bool): Sort in ascending order by default; otherwise descending.
+
+    Returns: 
+        The sorted list (listInput).
+
+    Notes:
+        - String comparisons are case-insensitive.
+        - Works on a copy of the input list to avoid modifying the original list.
+    """
+    n = len(listInput)
+    arr_copy = listInput.copy()
+
+    for i in range(n):
+        min_index = i
+        current_val = arr_copy[min_index].lower() if isinstance(arr_copy[min_index], str) else arr_copy[min_index]
+
+        for j in range(i + 1, n):
+            comp_val = arr_copy[j].lower() if isinstance(arr_copy[j], str) else arr_copy[j]
+
+            if (ascending and comp_val < current_val) or (not ascending and comp_val > current_val):
+                min_index = j
+                current_val = comp_val
+
+        if min_index != i:
+            arr_copy[i], arr_copy[min_index] = arr_copy[min_index], arr_copy[i]
+
+    return arr_copy
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\texttt{[5, 3, 8, 6, 2]}
+\subsubsection*{Step-by-Step Process}
+We perform searches that increase the frequency of accessed elements and reorder the list accordingly.
+
+\begin{enumerate}
+    \item \textbf{Pass 1 (i = 0):}
+    \begin{itemize}
+        \item Find the minimum from index 0 to 4: \texttt{min = 2} at index 4
+        \item Swap 5 and 2 $\rightarrow$ \texttt{[2, 3, 8, 6, 5]}
+    \end{itemize}
+    
+    \item \textbf{Pass 2 (i = 1):}
+    \begin{itemize}
+        \item Minimum from index 1 to 4: \texttt{min = 3} at index 1
+        \item No swap needed $\rightarrow$ \texttt{[2, 3, 8, 6, 5]}
+    \end{itemize}
+
+    \item \textbf{Pass 3 (i = 2):}
+    \begin{itemize}
+        \item Minimum from index 2 to 4: \texttt{min = 5} at index 4
+        \item Swap 8 and 5 $\rightarrow$ \texttt{[2, 3, 5, 6, 8]}
+    \end{itemize}
+
+    \item \textbf{Pass 4 (i = 3):}
+    \begin{itemize}
+        \item Minimum from index 3 to 4: \texttt{min = 6} at index 3
+        \item No swap needed $\rightarrow$ \texttt{[2, 3, 5, 6, 8]}
+    \end{itemize}
+
+    \item \textbf{Pass 5 (i = 4):}
+    \begin{itemize}
+        \item Only one element left $\rightarrow$ no operation
+    \end{itemize}
+\end{enumerate}
+\subsubsection*{Final Output}
+\textbf{Sorted List (Ascending):} \texttt{[2, 3, 5, 6, 8]}
+
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item The algorithm improves over the standard selection sort by avoiding unnecessary swaps.
+    \item It works for both strings and numbers. For string comparisons, it converts elements to lowercase to ensure case-insensitive sorting.
+    \item The original list is not modified; a copy is created for in-place sorting.
+\end{itemize}
+\subsubsection*{Possible Improvements / Future Work}
+\begin{itemize}
+    \item Add step tracking similar to educational visualizations.
+    \item Accept a custom comparison key (e.g., by string length or external ranking).
+    \item Convert to a stable version by shifting instead of swapping.
+\end{itemize}
+
+
+%OPT LINEAR SEARCH
+\subsection{Sentinel Linear Search}
+\subsubsection*{Brief Description}
+This  version of sequential search is called sentinel linear search, and it is optimized with minimal comparisons compared to the basic algorithm. It sets the value of the target element at the end of the array, or acting as the sentinel to ensure that the search will always find the target element without exceeding the list's bounds. This approach is slightly faster in practice because it eliminates the need for checking of boundaries. As a result, sentinel search reduces the number of comparisons, making it faster for unsorted arrays of moderate size. 
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+Start
+
+- Accept the array (arrArray) and the target element (intTarget).
+- Initialize intLastIndex as the index of the last element in arrArray.
+- Set the last element of arrArray to intTarget (sentinel).
+- Initialize variable i to 0.
+
+- While arrArray[i] is not equal to intTarget:
+    - Increment i by 1.
+
+- Restore the original last element of arrArray using intLastIndex.
+
+- If (i is less than intLastIndex) OR (the last element of arrArray is equal to intTarget):
+    - Pisplay "Element found at index [i]".
+- Else, print "Element not found".
+
+End
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def optimized_linear_search (arrArray, intTarget):
+    """
+    
+    Description: This function performs a sequential search on the given array, but instead of
+    iterating through every element of the array, it sets the target element to the last element of
+    the array for easier navigation. This is also known as sentinel linear search.
+
+    Parameters:
+    arrArray (list): The array in which to search for the target element.
+    intTarget (int): The target element to search for.
+    
+    Returns:
+    None: The function prints the result of the search directly.
+    
+    """
+    
+    intLastIndex = len(arrArray) - 1
+
+    arrArray[len(arrArray)-1] = intTarget
+    i = 0
+
+    while arrArray[i] != intTarget:
+        i += 1
+
+    arrArray[len(arrArray)-1] = intLastIndex
+
+    if ((i < len(arrArray) - 1) or (arrArray[len(arrArray)-1] == intTarget)):
+        print(f"Element found at index {i}", end = " ")
+    else:
+        print("Element not found", end = " ")
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\texttt{arrInput} = [6, 3, 4, 9, 7], \texttt{varTarget} = 4
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item Set the last element of \texttt{arrArray} (index 4) to the target value (4).
+    \item \texttt{arrArray} becomes [6, 3, 4, 9, 4].
+    \item Initialize index \texttt{i} to 0.
+    \item Check if the element at index 0 (6) is equal to \texttt{intTarget} (6 $\neq$ 4).
+    \item Check if the element at index 1 (3) is equal to \texttt{intTarget} (3 $\neq$ 4).
+    \item Check if the element at index 2 (4) is equal to \texttt{intTarget} (4 == 4). The target is found at index 2.
+    \item Restore the original last element (7) using the stored index.
+    \item \texttt{arrArray} returns to [6, 3, 4, 9, 7].
+\end{enumerate}
+
+\subsubsection*{Final Output}
+Output: Element found at index 2.
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+The function uses a sentinel value to optimize the traditional linear search, thus calling it a \textit{sentinel linear search}. It first replaces the last element of the array with the target value; with this, the search always finds the target without exceeding the array bounds. It then iterates through the array from the first index and compares each element to the target element. When the target value is found, the function prints the result with the index. After the search, it restores the original last index value. The sentinel linear search eliminates a separate boundary check during each comparison while also reducing unnecessary operations.
+\subsubsection*{Possible Improvements / Future Work}    
+Like the normal linear search, the sentinel linear search scans each element of the array to find a target value. It improves the process by temporarily placing the target value at the end of the array to ensure the search ends within bounds. While this approach is already an improvement, it could be further enhanced. For example:
+\begin{itemize}
+    \item Instead of stopping at the first match, it could collect all matching indices or occurrences—especially useful for arrays with duplicate values.
+    \item It could allow case-sensitive searches for text values.
+    \item It should properly handle special cases, such as empty arrays or non-comparable elements.
+\end{itemize}
+
+
+
+
+%SELF ORGANIZING
+\subsection{Self Organizing List (Optimized Sequential Search)}
+\subsubsection*{Brief Description}
+A self-organizing list is a data structure that reorders its elements based on access frequency, moving frequently accessed items closer to the front to improve search efficiency. Each time an element is searched, its access count is increased, and the list is reorganized so that elements with higher frequencies appear earlier. This adaptive approach optimizes sequential search performance, especially when certain elements are accessed more often than others.
+
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+    CLASS self_organizing_list:
+        DEFINE list with frequency = 0
+        DEFINE length
+    
+        FUNCTION print(self):
+            PRINT the updated array
+
+        FUNCTION search(self, key):
+            DEFINE index = -1
+
+            LOOP through self.length
+                IF self.list[i][0] == key:
+                    GET index = i
+                    UPDATE frequency
+                    BREAK
+                
+            IF index == -1:
+                RETURN "no key found"
+                
+            WHILE index > 0 and self.list[index][1] > self.list[index - 1][1]:
+                SWAP self.list[index] and self.list[index - 1]
+                index--
+
+            RETURN  index
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+class self_organizing_list:
+    """
+    This class enables the self organization list when searching as it position the most frequent search infront of the array to improve the performance of sequential search
+
+    Reference:
+        https://www.geeksforgeeks.org/self-organizing-list-count-method/
+        
+    Functions:
+        print(): print the self organization list
+        search(key): search and update the location of the list by descending order of frequency in each item
+    """
+    
+    #insert the array to the self organizing list
+    def __init__(self, intArray):
+        self.list = [[x, 0] for x in intArray]
+        self.length = len(intArray)
+
+    #print the list
+    def print(self):
+        """
+        This function print the organized list
+        
+        Argument:
+            self (obj): Object of self_organizing_list
+        
+        Return:
+            string: the string format of organized list
+
+        Example:
+            >>>obj.print()
+            32, 12, 33, 55, 22
+        """
+        return print(", ".join(str(item[0]) for item in self.list))
+    
+    def search(self, key):
+        """
+        This function search the key and update the location in response to its frequency
+        
+        Argument:
+            self (obj): Object of self_organizing_list
+            key (int): The item to be search
+        
+        Return:
+            integer: The index of the key to the current organized list
+
+        Example:
+            >>>obj.search(55)      [32, 12, 33, 55, 22] -> [55, 32, 12, 33, 22]
+            0
+        """
+        
+        intIndex = -1
+
+        #get the index of the key
+        for i in range(self.length):
+            if(self.list[i][0] == key):
+                intIndex = i
+                self.list[i][1] += 1
+                break
+
+        if(intIndex == -1):
+            return print("no key found")
+        
+        #change position base on the frequency in descending order
+        while (intIndex > 0 and self.list[intIndex][1] > self.list[intIndex - 1][1]):
+            self.list[intIndex], self.list[intIndex - 1] = self.list[intIndex - 1], self.list[intIndex]
+            intIndex -= 1
+
+        return intIndex
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\texttt{[64, 34, 25, 12, 22, 11, 90]}
+
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item Initialize the self-organizing list: \\
+    List with frequencies: 
+    \[
+    \texttt{[[64, 0], [34, 0], [25, 0], [12, 0], [22, 0], [11, 0], [90, 0]]}
+    \]
+
+    \item \textbf{SEARCH 22:} \\
+    Find 22 at index 4, increment its frequency: \\
+    \texttt{[[64, 0], [34, 0], [25, 0], [12, 0], [22, 1], [11, 0], [90, 0]]} \\
+    Move 22 forward, list update: \\
+    \texttt{[22, 64, 34, 25, 12, 11, 90]}
+
+    \item \textbf{SEARCH 22:} \\
+    Find 22 at index 0, increment its frequency: \\
+    \texttt{[[22, 2], [64, 0], [34, 0], [25, 0], [12, 0], [11, 0], [90, 0]]} \\
+    Move 22 forward, list update: \\
+    \texttt{[22, 64, 34, 25, 12, 11, 90]}
+
+    \item \textbf{SEARCH 90:} \\
+    Find 90 at index 6, increment its frequency: \\
+    \texttt{[[22, 2], [64, 0], [34, 0], [25, 0], [12, 0], [11, 0], [90, 1]]} \\
+    Move 90 forward, list update: \\
+    \texttt{[22, 90, 64, 34, 25, 12, 11]}
+\end{enumerate}
+
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item The index of 22 is: \texttt{0} \\
+    \texttt{22, 64, 34, 25, 12, 11, 90}
+    \item The index of 22 is: \texttt{0} \\
+    \texttt{22, 64, 34, 25, 12, 11, 90}
+    \item The index of 90 is: \texttt{1} \\
+    \texttt{22, 90, 64, 34, 25, 12, 11}
+\end{itemize}
+
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item The main logic of the self-organizing list implementation is to improve sequential search efficiency by dynamically reordering the list based on search frequency.
+    \item Each element in the list is paired with a frequency counter, which is incremented every time the element is searched.
+    \item After each search, the element is moved forward in the list until it is ahead of all elements with lower or equal frequency.
+    \item This adaptive approach reduces the average search time for commonly accessed elements, making the structure more efficient for non-uniform access patterns.
+\end{itemize}
+\subsubsection*{Possible Improvements / Future Work}
+\begin{itemize}
+    \item \textbf{Optimize reordering process:} When every element has the same frequency, unnecessary swaps may occur.
+\end{itemize}
+
+
+%OPT DYNAMIC PROGRAMMING FOR KNAPSACK
+\subsection{Dynamic Programming (optimized of Knapsack Problem)}
+\subsubsection*{Brief Description}
+The Dynamic Programming Knapsack algorithm efficiently solves the 0/1 Knapsack Problem by building a table that records the maximum value achievable for every possible number of items and capacity. It systematically considers each item and determines whether including it yields a better value than excluding it, filling out the table based on these choices. This approach guarantees an optimal solution and allows for easy reconstruction of the selected items that make up the maximum value.
+
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+    FUNCTION dynamic_programming_knapsack(items, capacity):
+        length = number of items
+        weights = list of item weights
+        values = list of item values
+
+        CREATE table of size (n + 1) * (capacity+1), initialized to 0
+
+        FOR i from 1 to (length + 1):
+            FOR w from 0 to capacity:
+                IF weights[i - 1] <= w
+                    table[i][w] = max(tablle[i - 1], table[i - 1][w - weights[i - 1]] + values[i - 1])
+                
+                ELSE:
+                    table[i][w] = table[i - 1][w]
+
+        //Trace back to find selecteditems
+        DEFINE selected_items = empty list
+        w = capacity
+
+        FOR i from n down to 1:
+            IF table[i][w] != table[i - 1][w]:
+                ADD (i - 1) to selected_items
+                w = w - weights[i-1]
+
+        REVERSE selected_item
+
+        RETURN selected_items, table[n][capacity], [selected_items, total weight, total value]
+
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def dynamic_programming_knapsack(items, capacity):
+    """
+    This function solves the Knapsack Problem using a dynamic programming approach. It creates a 2d table where each cell represents the best value achievable using a subset of items within a given capacity. This then pick an item based on which option gives a higher value.
+
+    Argument:
+        weights (list): the weights of the items
+        values (list): the values of the items
+        capacity (integer): the maximum weight knapsack must only handle
+        
+    Return:
+        tuple: (maximum value, list of selected item (values, weight))
+    
+    Example:
+
+    """
+
+    #Variables
+    length = len(items)
+    weights = [item["weight"] for item in items]
+    values = [item["value"] for item in items]
+    all_valid_subset = []
+
+
+    #2d table
+    table = [[0] * (capacity + 1) for _ in range(length + 1)]
+
+    for i in range(1, length + 1):
+        for w in range(capacity + 1):
+            if weights[i - 1] <= w:
+                table[i][w] = max(table[i - 1][w], table[i - 1][w - weights[i - 1]] + values[i - 1])
+            else:
+                table[i][w] = table[i - 1][w]
+
+    #Trace back to find the selected item
+    selected_items = []
+    w = capacity
+    for i in range(length, 0, -1):
+        if table[i][w] != table[i - 1][w]:
+            selected_items.append(i - 1)
+            w -= weights[i - 1]
+
+    #format data: (subset item name, total weight, total value)
+    selected_items.reverse()
+
+    selected_item_name = [f"Item {i+1}" for i in selected_items]
+    value = table[length][capacity]
+    weight = capacity - w
+
+    all_valid_subset.extend([selected_item_name, f"Weight: {weight}", f"Value: {value}"])
+    
+    return selected_item_name, value, all_valid_subset
+
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example} 
+\subsubsection*{Sample Input}
+\begin{verbatim}
+[{"weight": 2, "value": 3}, 
+{"weight": 3, "value": 4}, 
+{"weight": 4, "value": 5}, 
+{"weight": 5, "value": 8}]
+
+capacity = 5
+\end{verbatim}
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item Initialize 2D table: \\
+    Create a table with 5 rows (number of items + 1) and 6 columns (capacity + 1).
+
+    \item Fill the table: \\
+    For each item \( i = 1 \) to 4 and each capacity \( w = 0 \) to 5:
+    \begin{itemize}
+        \item For item 1 (weight = 2, value = 3): \\
+        For \( w = 2 \) to 5, \texttt{table[1][w] = 3}
+        \item For item 2 (weight = 3, value = 4): \\
+        \texttt{table[2][3]} = max(3, 0 + 4) = 4 \\
+        \texttt{table[2][5]} = max(3, 3 + 4) = 7
+    \end{itemize}
+    Continue the same logic for the remaining items.
+
+    \item Final table:
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+    \hline
+    & 0 & 1 & 2 & 3 & 4 & 5 \\
+    \hline
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    1 & 0 & 0 & 3 & 3 & 3 & 3 \\
+    2 & 0 & 0 & 3 & 4 & 4 & 7 \\
+    3 & 0 & 0 & 3 & 4 & 5 & 7 \\
+    4 & 0 & 0 & 3 & 4 & 5 & 8 \\
+    \hline
+    \end{tabular}
+    \end{center}
+
+    \item Traceback to find selected items: \\
+    Start from \texttt{table[4][5]} = 8 \\
+    Since $\texttt{table[4][5]} \ne \texttt{table[3][5]}$, item 4 was included. \\
+    Subtract its weight: \( w = 5 - 5 = 0 \) \\
+    Stop (since \( w = 0 \)).
+\end{enumerate}
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item Selected items: \texttt{['Item 4']}
+    \item Maximum value: \texttt{8}
+    \item All valid subset: \texttt{[['Item 4'], 'Weight: 5', 'Value: 8']}
+\end{itemize}
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item The main logic of the dynamic programming knapsack implementation is to build a 2D table where each entry represents the maximum value achievable with a given number of items and a specific capacity.
+    \item For each item and each possible capacity, the algorithm decides whether to include the current item by comparing the value of including it (if it fits) versus excluding it, and stores the maximum of these two options in the table.
+    \item After filling the table, the algorithm traces back from the bottom-right cell to determine which items were included in the optimal solution by checking where the value changes, reconstructing the list of selected items.
+    \item This approach ensures that all subproblems are solved and combined efficiently, guaranteeing an optimal solution for the 0/1 Knapsack Problem.
+\end{itemize}
+
+\subsubsection*{Possible Improvements / Future Work} 
+\begin{itemize}
+    \item \textbf{Input Flexibility:} Allow the function to handle fractional weights/values for solving the fractional knapsack problem.
+    \item \textbf{Early Termination:} Add checks to terminate early if the optimal solution is found before filling the entire table.
+\end{itemize}
+
+
+
+
+
+
+%OPT KNAPSACK OPT
+\subsection{0/1 Knapsack Problem (Dynamic Programming + Backtracking)}
+\subsubsection*{Brief Description}
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+            1. Manually count number_of_items from items list.
+
+            2. Create a 2D table knapsack_table with size (number_of_items + 1) 
+            x (capacity + 1) and initialize all cells to 0.
+            
+            3. Fill the table:
+            For each item_index from 1 to number_of_items:
+                For each current_capacity from 0 to capacity:
+                    If current item fits:
+                        Calculate value with item
+                        Calculate value without item
+                        Store the maximum of the two
+                    Else:
+                        Copy value from previous item
+
+            4. Recursively backtrack from bottom-right cell:
+            If item was included in the optimal value:
+                Add to current subset
+                Recurse with reduced capacity
+            Also recurse without including the item
+
+            5. Collect all valid optimal subsets
+
+            6. Return:
+            - first valid optimal subset
+            - highest total value
+            - list of all optimal subsets
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+def knapsack_brute_force(items, capacity):
+"""
+Solves the 0/1 Knapsack problem by enumerating all subsets of items.
+
+    Args:
+        items (list of tuples): Each tuple contains (name, weight, value).
+        capacity (int): Maximum weight capacity.
+
+    Returns:
+        tuple:
+            best_subset (list): List of item names in the best subset.
+            best_value (int): Maximum total value achievable.
+            all_valid_subsets (list): All subsets achieving best value, with weights and values.
+    """
+
+    # Step 1: Manually count number_of_items
+    number_of_items = 0
+    while True:
+        try:
+            _ = items[number_of_items]
+            number_of_items += 1
+        except IndexError:
+            break
+
+    # Step 2: Initialize subset enumeration
+    all_subsets = []         # Will store valid subsets with their weight and value
+    max_value = 0            # To track the best total value
+    subset_index = 0         # Starting subset index
+    max_subset_index = 1     # 2^number_of_items total combinations
+
+    # Step 2.1: Compute 2^number_of_items manually
+    for _ in range(number_of_items):
+        max_subset_index *= 2
+
+    # Step 3: Enumerate all subsets
+    while subset_index < max_subset_index:
+        subset_weight = 0
+        subset_value = 0
+        subset_names = []
+
+        # Step 3.1: Check which items are included in this subset
+        item_idx = 0
+        while item_idx < number_of_items:
+            if (subset_index >> item_idx) & 1 == 1:
+                item_name, item_weight, item_value = items[item_idx]
+                subset_weight += item_weight
+                subset_value += item_value
+                subset_names.append(item_name)
+            item_idx += 1
+
+        # Step 3.2: If valid subset (within capacity), record it
+        if subset_weight <= capacity:
+            all_subsets.append((subset_names, subset_weight, subset_value))
+            if subset_value > max_value:
+                max_value = subset_value
+
+        subset_index += 1
+
+    # Step 4: Filter only the best subsets (those with max_value)
+    best_subsets = []
+    index = 0
+    while index < len(all_subsets):
+        if all_subsets[index][2] == max_value:
+            best_subsets.append(all_subsets[index])
+        index += 1
+
+    # Step 5: Select the first optimal subset (if exists)
+    best_subset = best_subsets[0][0] if best_subsets else []
+
+    # Step 6: Return results
+    return best_subset, max_value, best_subsets
+
+
+    B. Docstring Example:
+
+    def knapsack_optimize(items, capacity):
+    """
+    Solves the 0/1 Knapsack problem using dynamic programming and backtracking
+    to find all subsets of items that give the maximum value without exceeding capacity.
+
+    Args:
+        items (list of tuple): A list where each element is a tuple (value, weight)
+                               representing the value and weight of an item.
+        capacity (int): The total weight capacity of the knapsack.
+
+    Returns:
+        tuple:
+            best_subset (list): Indices of the first optimal subset found.
+            best_value (int): The maximum total value achievable.
+            all_valid_subsets (list of lists): All combinations of indices that achieve the best value.
+    """
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+    \texttt {items = [(10, 5), (40, 4), (30, 6)]}
+    \texttt capacity = 10
+\subsubsection*{Step-by-Step Process}
+\begin{itemize}
+    \item \textbf{Item count:} 3
+    \item \textbf{Knapsack capacity:} 10
+    \item \textbf{DP Table size:} 4 rows × 11 columns (for 0–3 items, capacity 0–10)
+\end{itemize}
+
+\textbf{Filling DP Table}
+\begin{itemize}
+    \item \textbf{Item 1 (weight: 10, value: 5):}
+    Fits at capacity = 10
+    $\Rightarrow$ \texttt{dp[1][10] = 5}
+    \item \textbf{Item 2 (weight: 40, value: 4):}
+    Too heavy for all capacities (weight > 10)
+    $\Rightarrow$ Table unchanged for this item
+    \item \textbf{Item 3 (weight: 30, value: 6):}
+    Also too heavy for all capacities
+\end{itemize}
+
+\textbf{C. Backtracking Step}
+
+\begin{itemize}
+    \item Start from \texttt{dp[3][10] = 5}
+    \item Compare with \texttt{dp[2][10] = 5} $\Rightarrow$ no item included
+    \item Compare with \texttt{dp[1][10] = 5} $\Rightarrow$ possible inclusion of Item 1
+    \item Item 1 (value: 5, weight: 10) fits $\Rightarrow$ included
+    \item Backtrack to \texttt{dp[0][0]}
+\end{itemize}
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item \textbf{Best subset:} [0] $\Rightarrow$ corresponds to Item 1
+    \item \textbf{Best value:} 5
+    \item \textbf{All valid subsets:} [[0]] (only one subset achieves max value)
+\end{itemize}
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item The logic follows a clear DP table-based strategy for tracking maximum values at each weight capacity. 
+    \item The use of manual loops, recursive backtracking, and custom data structures fits the constraint of avoiding built-ins and imports, while still producing all optimal subsets.
+\end{itemize}
+\subsubsection*{Possible Improvements / Future Work}   
+\begin{itemize}
+    \item Optimize space by using a 1D table if only best value is needed
+    \item Improve efficiency in subset backtracking (avoid duplicates)
+    \item Pre-sort items by value-to-weight ratio to prioritize high-efficiency items in dynamic approximation
+\end{itemize}
+
+
+
+%OPT DYNAMIC PROG FOR TSP
+\subsection{Travelling Salesman Problem (Optimized)}
+\subsubsection*{Brief Description}
+The TSP Optimized Algorithm solves the Traveling Salesman Problem (TSP) using dynamic programming with bitmasking, known as the Held-Karp algorithm. This method improves upon the brute-force approach by reducing the time complexity from $\mathcal{O}(n!)$ to $\mathcal{O}(n^2 \cdot 2^n)$, making it feasible for medium-sized inputs. It systematically builds up solutions for subsets of cities, storing intermediate results to avoid redundant computations.
+
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+FUNCTION fnTSPOptimized(distanceMatrix, startCity):
+    IF distanceMatrix is not a valid non-empty square matrix:
+        RAISE error
+
+    IF startCity is not a valid index:
+        RAISE error
+
+    cityCount <- number of cities
+    totalMasks <- 2 ^ cityCount
+
+    dpCost <- 2D list of size [totalMasks][cityCount] initialized to INF
+    dpPrev <- 2D list of size [totalMasks][cityCount] initialized to None
+
+    dpCost[1 << startCity][startCity] <- 0
+
+    FOR mask FROM 1 TO totalMasks - 1:
+        IF mask does not include startCity:
+            CONTINUE
+
+        FOR currentCity FROM 0 TO cityCount - 1:
+            IF mask does not include currentCity:
+                CONTINUE
+
+            prevMask <- mask with currentCity bit turned off
+            IF prevMask == 0:
+                CONTINUE
+
+            FOR prevCity FROM 0 TO cityCount - 1:
+                IF prevCity is in prevMask AND prevCity != currentCity:
+                    newCost <- dpCost[prevMask][prevCity] + distanceMatrix[prevCity][currentCity]
+
+                    IF newCost < dpCost[mask][currentCity]:
+                        dpCost[mask][currentCity] <- newCost
+                        dpPrev[mask][currentCity] <- prevCity
+
+    finalMask <- (1 << cityCount) - 1
+    minCost <- INF
+    lastCity <- None
+
+    FOR city FROM 0 TO cityCount - 1:
+        IF city != startCity:
+            totalCost <- dpCost[finalMask][city] + distanceMatrix[city][startCity]
+
+            IF totalCost < minCost:
+                minCost <- totalCost
+                lastCity <- city
+
+    IF lastCity is None:
+        RETURN ([startCity], 0)
+
+    path <- [startCity]
+    currentCity <- lastCity
+    currentMask <- finalMask
+
+    WHILE currentCity != startCity:
+        INSERT currentCity at position 1 in path
+        tempCity <- dpPrev[currentMask][currentCity]
+        currentMask <- currentMask XOR (1 << currentCity)
+        currentCity <- tempCity
+
+    RETURN (path, minCost)
+\end{lstlisting}
+
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+A. Function Code:
+def fnTSPOptimized(arrDistanceMatrix: list, intStartCity: int) -> tuple[list, int]:
+    """
+    Description:
+        Solves the Traveling Salesman Problem using dynamic programming with bit 
+        manipulation (Held-Karp algorithm). This optimized version has a time 
+        complexity of \mathcal{O}(n^2 \cdot 2^n) where n is the number of cities.
+
+    Parameters:
+        arrDistanceMatrix (list): Square matrix where element [i][j] represents 
+                                 the distance from city i to city j
+        intStartCity (int): Index of the starting city (0-indexed)
+
+    Returns:
+        tuple: A tuple containing:
+            - list: The optimal path as city indices (starting and ending with intStartCity)
+            - int: Total distance of the optimal path
+
+    References:
+        https://www.geeksforgeeks.org/travelling-salesman-problem-implementation-using-dynamic-programming/
+    """
+    if not arrDistanceMatrix or not isinstance(arrDistanceMatrix, list):
+        raise ValueError("arrDistanceMatrix must be a non-empty 2D list")
+
+    intCityCount: int = len(arrDistanceMatrix)
+    for arrRow in arrDistanceMatrix:
+        if not isinstance(arrRow, list) or len(arrRow) != intCityCount:
+            raise ValueError("arrDistanceMatrix must be a square matrix")
+
+    if not isinstance(intStartCity, int) or intStartCity < 0 or intStartCity >= intCityCount:
+        raise ValueError("intStartCity must be a valid index within the distance matrix")
+    
+    # Initialize DP arrays
+    intTotalMasks: int = 1 << intCityCount
+    arrDPCost: list = [[float('inf')] * intCityCount for _ in range(intTotalMasks)]
+    arrDPPrev: list = [[None] * intCityCount for _ in range(intTotalMasks)]
+    
+    # Base case: starting position
+    arrDPCost[1 << intStartCity][intStartCity] = 0
+    
+    # Fill DP table
+    for intMask in range(1, intTotalMasks):
+        if not (intMask & (1 << intStartCity)):
+            continue
+            
+        for intCurrentCity in range(intCityCount):
+            if not (intMask & (1 << intCurrentCity)):
+                continue
+                
+            intPrevMask: int = intMask ^ (1 << intCurrentCity)
+            if intPrevMask == 0:
+                continue
+                
+            for intPrevCity in range(intCityCount):
+                if not (intPrevMask & (1 << intPrevCity)) or intPrevCity == intCurrentCity:
+                    continue
+                    
+                intNewCost: int = arrDPCost[intPrevMask][intPrevCity] + arrDistanceMatrix[intPrevCity][intCurrentCity]
+                
+                if intNewCost < arrDPCost[intMask][intCurrentCity]:
+                    arrDPCost[intMask][intCurrentCity] = intNewCost
+                    arrDPPrev[intMask][intCurrentCity] = intPrevCity
+    
+    # Find optimal last city
+    intFinalMask: int = (1 << intCityCount) - 1
+    intMinCost: int = float('inf')
+    intLastCity: int = None
+    
+    for intCity in range(intCityCount):
+        if intCity == intStartCity:
+            continue
+            
+        intTotalCost: int = arrDPCost[intFinalMask][intCity] + arrDistanceMatrix[intCity][intStartCity]
+        if intTotalCost < intMinCost:
+            intMinCost = intTotalCost
+            intLastCity = intCity
+    
+    # Handle single city case
+    if intLastCity is None:
+        return [intStartCity], 0
+    
+    # Reconstruct path
+    arrPath: list = [intStartCity]
+    intCurrentCity: int = intLastCity
+    intCurrentMask: int = intFinalMask
+    
+    while intCurrentCity != intStartCity:
+        arrPath.insert(1, intCurrentCity)
+        intTempCity: int = arrDPPrev[intCurrentMask][intCurrentCity]
+        intCurrentMask ^= (1 << intCurrentCity)
+        intCurrentCity = intTempCity
+    
+    return arrPath, intMinCost
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\begin{itemize}
+    \item \texttt{startCity = 0}
+    \item \texttt{distanceMatrix} =
+    \[
+    \begin{bmatrix}
+    0 & 10 & 15 & 20 \\
+    10 & 0 & 35 & 25 \\
+    15 & 35 & 0 & 30 \\
+    20 & 25 & 30 & 0
+    \end{bmatrix}
+    \]
+\end{itemize}
+
+This matrix defines the distances between 4 cities. For example, the distance from city 0 to city 1 is 10, and from city 2 to city 3 is 30.
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item \textbf{Initialize}
+    
+    \begin{itemize}
+        \item \texttt{cityCount = 4}
+        \item \texttt{totalMasks = 2\textasciicircum4 = 16}
+        \item \texttt{dpCost} and \texttt{dpPrev} are initialized:
+            \begin{itemize}
+                \item \texttt{dpCost[1 << 0][0] = 0} \quad (i.e., \texttt{dpCost[0001][0] = 0})
+                \item All other entries are set to $\infty$ or \texttt{None}
+            \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Dynamic Programming Loop}
+
+    Iteratively build minimal costs to reach each subset of visited cities ending at a specific city.
+
+    \begin{itemize}
+        \item \texttt{mask = 0011} (cities 0 and 1 visited)
+            \begin{itemize}
+                \item Consider transition from 0 $\rightarrow$ 1
+                \item \texttt{dpCost[0011][1] = dpCost[0001][0] + distance[0][1] = 0 + 10 = 10}
+            \end{itemize}
+        \item \texttt{mask = 0111} (cities 0, 1, 2 visited)
+            \begin{itemize}
+                \item Consider ending at city 2 from city 1:
+                \item \texttt{dpCost[0111][2] = dpCost[0011][1] + distance[1][2] = 10 + 35 = 45}
+            \end{itemize}
+    \end{itemize}
+
+    This continues until all possible combinations of visited cities are filled in the table.
+
+    \item \textbf{Find Minimum Cost Tour}
+    \begin{itemize}
+        \item \texttt{finalMask = 1111} (all cities visited)
+        \item For each city $i \ne$ \texttt{startCity}, compute: \texttt{dpCost[1111][i] + distance[i][0]}
+    \end{itemize}
+
+    \item \textbf{Reconstruct Path}
+    \begin{itemize}
+        \item Start from \texttt{lastCity} determined above
+        \item Walk backward using \texttt{dpPrev} to reconstruct the full path
+        \item Insert each city at position 1 in the path, ending with \texttt{startCity} at both ends
+    \end{itemize}
+\end{enumerate}
+\subsubsection*{Final Output}
+\begin{itemize}
+    \item \texttt{bestPath = [0, 1, 3, 2, 0]}
+    \item \texttt{minDistance = 80}
+\end{itemize}
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+This algorithm uses dynamic programming with bitmasking (Held-Karp) to efficiently solve the TSP. Instead of exploring every possible permutation recursively, it builds up solutions incrementally by computing the shortest path to reach every subset of cities with a known ending point. The key innovation is using a bitmask to represent visited cities, enabling memoization of overlapping subproblems.
+
+Key decisions include:
+\begin{itemize}
+    \item \textbf{DP Table (\texttt{dpCost})}: Stores the minimum cost to reach a subset of cities ending at a specific city.
+    \item \textbf{Bitmasking}: Efficiently tracks subsets using integer masks (e.g., \texttt{01101} means cities 0, 2, and 3 are visited).
+    \item \textbf{Backtracking (\texttt{dpPrev})}: Enables full path reconstruction after computing the minimum cost.
+    \item \textbf{Start-City Optimization}: Skips any state not containing the start city to reduce unnecessary computations.
+\end{itemize}
+
+This design keeps the time and space complexity at $\mathcal{O}(n^2 \cdot 2^n)$ and allows solutions for up to $\sim$20 cities on modern machines.
+
+
+\subsubsection*{Possible Improvements / Future Work}    
+Despite being much faster than brute-force, this approach has limitations:
+
+\begin{itemize}
+    \item \textbf{Space Optimization:} Use a rolling array for \texttt{dpCost} to reduce space from $\mathcal{O}(n \cdot 2^n)$ to $\mathcal{O}(2 \cdot n \cdot 2^n)$.
+    \item \textbf{Parallelism:} Parallelize independent subset evaluations to improve performance.
+    \item \textbf{Early Exit Strategies:} Prune subtrees using lower-bound heuristics (like in branch-and-bound).
+    \item \textbf{Graph Visualization:} Add support to visualize tours using a plotting library for better interpretation.
+    \item \textbf{Path Caching:} Cache frequent sub-paths for TSP instances with repeated structures (meta-heuristics).
+\end{itemize}
+
+
+
+%OPT BRANCH AND BOUND
+\subsection{Branch and Bound (optimized of Travelling Salesman Problem)}
+\subsubsection*{Brief Description}
+The Branch and Bound algorithm for the Traveling Salesman Problem (TSP) systematically explores all possible routes using a state-space tree, but prunes branches that cannot yield a better solution than the best one found so far. By maintaining lower bounds on the cost of partial solutions and expanding only the most promising nodes, it efficiently narrows down the search space to find the minimum-cost tour. This approach is particularly effective for solving combinatorial optimization problems like TSP where exhaustive search is impractical for larger instances.
+
+
+\subsubsection*{Pseudocode}
+\begin{lstlisting}
+    CLASS Node:
+        DEFINE path
+        DEFINE reduced_matrix
+        DEFINE cost
+        DEFINE vertex
+        DEFINE level
+
+    FUNCTION copy_matrix(matrix):
+        RETURN copy of matrix
+    
+    FUNCTION reduce_matrix(matrix)
+        FOR each row in matrix:
+            FIND the minimum value in the row (excluding INFINITE)
+            SUBTRACT the minimum from all elements in the row
+            ADD the minimum to the reduction cost
+        FOR each column in matrix:
+            FIND the minimum value in the column (excluding INFINITE)
+            SUBTRACT the minimum from all elements in the column
+            ADD the minimum to the reduction cost
+        RETURN the total reduction cost 
+
+    FUNCTION calculate_path_cost(path, cost_matrix):
+        SET total_cost = 0
+        FOR i from 0 to length(path) - 2:
+            total_cost += cost_matrix[path[i]][path[i+1]]
+        RETURN total_cost
+
+    FUNCTION branch_and_bound_tsp(cost_matrix, start_vertex):
+        INITIALIZE priority queue with root Node (starting at start_vertex)
+        SET min_cost to INFINITE
+        SET best_path to None
+
+        WHILE priority queue is not empty:
+            POP node with lowest cost from priority queue
+            IF node.level == number of cities - 1:
+                COMPLETE the path by returning to start_vertex
+                CALCULATE total cost of this path
+                IF total cost < min_cost:
+                    UPDATE min_cost and best_path
+                CONTINUE
+
+            FOR each city i not in node.path:
+                IF edge from node.vertex to i exists:
+                    CREATE new_path by appending i to node.path
+                    CREATE new_matrix by copying and updating node.reduced_matrix:
+                        - Set row of node.vertex and column of i to INFINITE
+                        - Set [i][start_vertex] to INFINITE
+                    CALCULATE cost_to_i as cost from node.vertex to i
+                    CALCULATE new_cost as node.cost + cost_to_i + reduce_matrix(new_matrix)
+                    CREATE child Node with new_path, new_matrix, new_cost, i, node.level + 1
+                    ADD child Node to priority queue
+
+    RETURN min_cost, best_path
+
+
+\end{lstlisting}
+
+\subsection*{Python Implementation}
+\subsubsection*{Function Code}
+\begin{lstlisting}[language=Python]
+class Node:
+    """
+    This represents a node in the search tree for the branch and bound TSP algorithm. It stores the current path, reduced cost matrix, total cost, current vertex, and level in the tree.
+    """
+    def __init__(self, path, reduced_matrix, cost, vertex, level):
+        self.path = path
+        self.reduced_matrix = reduced_matrix
+        self.cost = cost
+        self.vertex = vertex
+        self.level = level
+
+def copy_matrix(matrix):
+    """
+    This creates and returns a copy of a 2D matrix. To ensures that modifications to the new matrix do not affect the original.
+    
+    Args:
+        matrix (list of list of float): The matrix to copy.
+
+    Returns:
+        list of list of float: The copied matrix.
+    """
+    return [row[:] for row in matrix]
+
+def reduce_matrix(matrix):
+    """
+    This reduces the given cost matrix by subtracting the minimum value from each row and column and returns the total reduction cost, which is used as a lower bound in the branch and bound algorithm.
+    
+    Args:
+        matrix (list of list of float): The cost matrix to reduce.
+
+    Returns:
+        float: The sum of all reductions (lower bound cost).
+    """
+
+    length = len(matrix)
+    INFINITE = float('inf')
+
+    #decrease the row
+    row_min = [min([matrix[i][j] if matrix[i][j] != INFINITE else INFINITE for j in range(length)]) for i in range(length)]
+
+    for i in range(length):
+        if(row_min[i] != INFINITE and row_min[i] > 0):
+            for j in range(length):
+                if (matrix[i][j] != INFINITE):
+                    matrix[i][j] -= row_min[i]
+    
+    #decrease the column
+    col_min = [min([matrix[j][i] if matrix[j][i] != INFINITE else INFINITE for j in range(length)]) for i in range(length)]
+
+    for i in range(length):
+        if(col_min[i] != INFINITE and col_min[i] > 0):
+            for j in range(length):
+                if (matrix[j][i] != INFINITE):
+                    matrix[j][i] -= col_min[i]
+
+    cost = sum([value for value in row_min if value != INFINITE]) + sum([value for value in col_min if value != INFINITE])
+    return cost
+
+def get_min_node(priority):
+    """
+    This finds and removes the node with the lowest cost from the priority list and this simulates a priority queue for the branch and bound algorithm.
+    
+    Args:
+        priority (list of Node): The list of nodes to search.
+
+    Returns:
+        Node: The node with the minimum cost.
+    """
+
+    min_index = 0
+    for i in range(1, len(priority)):
+        if(priority[i].cost < priority[min_index].cost):
+            min_index = i
+    return priority.pop(min_index)
+
+def calculate_path_cost(path, cost_matrix):
+    """
+    Calculates the total cost of a given path based on the provided cost matrix.
+
+    Args:
+        path (list of int): The sequence of vertices representing the path.
+        cost_matrix (list of list of float): The cost matrix representing the graph.
+
+    Returns:
+        float: The total cost of traversing the given path.
+    """
+        
+    total = 0
+    for i in range(len(path) - 1):
+        total += cost_matrix[path[i]][path[i + 1]]
+    return total
+
+def branch_and_bound_tsp(cost_matrix):
+    """
+    This is the main function that solves the Traveling Salesman Problem using the branch and bound method and returns the minimum cost and the best path found.
+    
+    References:
+        https://www.youtube.com/watch?v=1FEP_sNb62k
+        https://www.geeksforgeeks.org/traveling-salesman-problem-using-branch-and-bound-2/
+
+    Args:
+        cost_matrix (list of list of float): The cost matrix representing the graph
+        
+    Returns:
+        tuple: (minimum cost, best path as a list of vertices)
+    """
+    length = len(cost_matrix)
+    INFINITE = float('inf')
+    priority = []
+
+    initial_matrix = copy_matrix(cost_matrix)
+    cost = reduce_matrix(initial_matrix)
+    root = Node(path = [0], reduced_matrix = initial_matrix, cost = cost, vertex = 0, level = 0)
+    priority.append(root)
+    min_cost = INFINITE
+    best_path = []
+
+    while priority:
+        min_node = get_min_node(priority)
+        if min_node.level == length - 1:
+            last = min_node.vertex
+            for i in range(length):
+                if i not in min_node.path:
+                    min_node.path.append(i)
+                    min_node.cost += min_node.reduced_matrix[last][i]
+                    last = i
+            
+            min_node.path.append(0)
+            min_node.cost += cost_matrix[last][0]
+            
+            if min_node.cost < min_cost:
+                min_cost = min_node.cost
+                best_path = min_node.path[:]
+            continue
+
+        for i in range(length):
+            if i not in min_node.path and min_node.reduced_matrix[min_node.vertex][i] != INFINITE:
+                new_path = min_node.path + [i]
+                new_matrix = copy_matrix(min_node.reduced_matrix)
+                for k in range(length):
+                    new_matrix[min_node.vertex][k] = INFINITE
+                    new_matrix[k][i] = INFINITE
+                new_matrix[i][0] = INFINITE
+                cost_to_i = min_node.reduced_matrix[min_node.vertex][i]
+                new_cost = min_node.cost + cost_to_i + reduce_matrix(new_matrix)
+                
+                child = Node(new_path, new_matrix, new_cost, i, min_node.level + 1)
+                priority.append(child)
+
+    if best_path:
+        min_cost = calculate_path_cost(best_path, cost_matrix)
+
+    return min_cost, best_path
+\end{lstlisting}
+
+\subsection*{Simulation / Step-by-Step Example}
+\subsubsection*{Sample Input}
+\begin{itemize}
+    \item \texttt{distanceMatrix} =
+    \[
+    \begin{bmatrix}
+    \infty & 10 & 15 & 20 \\
+    10 & \infty & 35 & 25 \\
+    15 & 35 & \infty & 30 \\
+    20 & 25 & 30 & \infty
+    \end{bmatrix}
+    \]
+\end{itemize}
+\subsubsection*{Step-by-Step Process}
+\begin{enumerate}
+    \item \textbf{Initial Reduction}
+
+    Reduce each row and column by their minimum value (excluding $\infty$):
+
+    \[
+    \begin{bmatrix}
+    \infty & 0 & 5 & 10 \\
+    0 & \infty & 25 & 15 \\
+    0 & 20 & \infty & 15 \\
+    0 & 5 & 10 & \infty
+    \end{bmatrix}
+    \]
+
+    \textbf{Initial lower bound cost:} 70
+
+    \item \textbf{Start from City 0}
+
+    \begin{itemize}
+        \item Path: \texttt{[0]}
+        \item Reduced matrix: same as above
+        \item Cost: 70
+    \end{itemize}
+
+    \item \textbf{Branching}
+
+    For each possible next city (1, 2, 3), create a child node.
+
+    \textbf{To City 1:}
+
+    \begin{itemize}
+        \item Update matrix: set row 0 and column 1 to $\infty$, and set entry [1][0] to $\infty$
+    \end{itemize}
+
+    The updated matrix:
+
+    \[
+    \begin{bmatrix}
+    \infty & \infty & \infty & \infty \\
+    \infty & \infty & 25 & 15 \\
+    0 & \infty & \infty & 15 \\
+    0 & \infty & 10 & \infty
+    \end{bmatrix}
+    \]
+
+    \begin{itemize}
+        \item Reduce the matrix again and calculate new lower bound and total cost.
+    \end{itemize}
+
+    Repeat this process similarly for city 2 and city 3.
+
+    \item \textbf{Select Node with Minimum Cost}
+
+    Choose the node with the lowest total cost from the priority queue. Expand this node by repeating the branching and reduction process.
+
+    \item \textbf{Continue Until All Cities Are Visited}
+
+    Once all cities are visited, complete the tour by returning to the starting city. Calculate the total cost for the complete path.
+
+    \item \textbf{Track Best Path}
+
+    If a complete path has a lower cost than the current best, update the best path and the minimum cost.
+\end{enumerate}
+
+
+
+\subsection*{Discussion}
+\subsubsection*{Implementation Logic}
+\begin{itemize}
+    \item The main logic of the Branch and Bound TSP implementation is to systematically explore all possible tours using a state-space tree, but prune branches that cannot yield a better solution than the current best.
+    \item Each node in the search tree represents:
+    \begin{itemize}
+        \item a partial path,
+        \item a reduced cost matrix,
+        \item the accumulated cost so far,
+        \item the current city, and
+        \item the level (number of cities visited).
+    \end{itemize}
+    \item At each step, the algorithm selects the node with the lowest estimated cost (using a priority queue), expands it by considering all possible next cities, and updates the cost matrix and lower bound using row and column reductions.
+    \item When a complete tour is found (all cities visited), the total cost is compared to the current minimum, and the best path is updated if a lower cost is found.
+    \item This approach efficiently narrows the search space by prioritizing promising paths and discarding those that cannot improve the solution, making it suitable for solving TSP instances where exhaustive search is impractical.
+\end{itemize}
+\subsubsection*{Possible Improvements / Future Work}    
+\begin{itemize}
+    \item \textbf{Implementation Complexity:} Improve the implementation for better readability, maintainability, and ease of debugging.
+    \item \textbf{Optimize Node Expansion and Pruning:} Further reduce the number of unnecessary branches explored.
+\end{itemize}
+
+
+\clearpage
+\section{Findings and Conclusion}
+\hspace{.2in}Throughout this exploration of brute force algorithms—Bubble Sort, Selection Sort, Sequential Search, Traveling Salesman Problem, and Knapsack Problem—we've gained significant practical understanding of computer science's most fundamental problem-solving approaches. These straightforward techniques form the backbone of algorithmic thinking and provide essential context for more sophisticated methods.
+
+Our implementations revealed that while brute force approaches guarantee correct solutions by exhaustively checking all possibilities, they come with serious performance limitations. The sorting algorithms (Bubble and Selection Sort) demonstrated $\mathcal{O}(n^2)$ time complexity, making them impractical for large datasets despite their conceptual simplicity. Similarly, the combinatorial explosion in the Traveling Salesman Problem ($\mathcal{O}(n!)$) and Knapsack Problem ($\mathcal{O}(2^n)$) highlighted why computational efficiency becomes critical in real-world applications.
+
+The optimization techniques we developed—like Cocktail Shaker Sort, Comb Sort, and Bidirectional Enhanced Selection Sort for the simpler algorithms, and Dynamic Programming and Branch-and-Bound approaches for the complex problems—showed how clever modifications can dramatically improve performance without sacrificing accuracy. These optimizations reduced redundant operations and unnecessary comparisons while maintaining the core logic of the original algorithms.
+
+Perhaps most importantly, this work underscored why understanding brute force methods matters: they establish baseline performance metrics against which all other algorithms are measured. By implementing both the basic and optimized versions, we gained hands-on experience with the fundamental trade-offs between time complexity, space requirements, and implementation difficulty that drive algorithm design.
+
+The self-organizing search list implementation particularly demonstrated how adding adaptive behavior can improve performance for real-world usage patterns where data access isn't uniformly random. This principle—adapting algorithms to match real-world constraints and patterns—represents one of the most powerful lessons from our work.
+
+Learning to analyze algorithms mathematically through time complexity calculations also proved essential. The stark difference between polynomial-time algorithms like Bubble Sort ($\mathcal{O}(n^2)$) and exponential ones like brute force Knapsack ($\mathcal{O}(2^n)$) became clear not just in theory but in our practical implementations.
+
+The progression from brute force to optimized algorithms mirrored the historical development of computer science itself—starting with straightforward but inefficient approaches before refining them through careful analysis and creative problem-solving. This journey from simplicity to sophistication isn't just academic; it's the same path we'll follow when tackling new computational problems.
+
+Working through these implementations has strengthened our programming skills, deepened our understanding of algorithm analysis, and prepared us to recognize when brute force approaches are appropriate and when more sophisticated techniques are needed. Though brute force algorithms may seem obsolete in an era of highly optimized libraries, they remain the foundation upon which all algorithmic thinking is built—and mastering them is the first step toward computational excellence.
+
+
+
+\clearpage
+\begin{thebibliography}{}
+
+\bibitem{bubble} GeeksforGeeks. (2025, January 21). \textit{Bubble sort algorithm}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/bubble-sort-algorithm/}
+
+\bibitem{cocktail} GeeksforGeeks. (2023, September 25). \textit{Cocktail sort}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/cocktail-sort/}
+
+\bibitem{comb-geeks} GeeksforGeeks. (2024, August 27). \textit{Comb sort}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/comb-sort/}
+
+\bibitem{linear-search} GeeksforGeeks. (2025, March 27). \textit{Linear search algorithm}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/linear-search/}
+
+\bibitem{selection-sort} GeeksforGeeks. (2024, December 9). \textit{Selection sort}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/selection-sort/}
+
+\bibitem{self-organizing} GeeksforGeeks. (2023, December 9). \textit{Self-organizing list (count method)}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/self-organizing-list-count-method/}
+
+\bibitem{sentinel-linear} GeeksforGeeks. (2024). \textit{Sentinel linear search algorithm}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/sentinel-linear-search/}
+
+\bibitem{tsp-bf} GeeksforGeeks. (2024, November 26). \textit{Traveling Salesman Problem (TSP) implementation}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/}
+
+\bibitem{tsp-bnb} GeeksforGeeks. (2023, April 30). \textit{Traveling Salesman Problem using Branch and Bound}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/traveling-salesman-problem-using-branch-and-bound-2/}
+
+\bibitem{tsp-dp} GeeksforGeeks. (2024, November 26). \textit{Travelling Salesman Problem using Dynamic Programming}. GeeksforGeeks. \url{https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming/}
+
+\bibitem{held-karp} Held, M., \& Karp, R. M. (1962). A dynamic programming approach to sequencing problems. \textit{Journal of the Society for Industrial and Applied Mathematics, 10}(1), 196–210.
+
+\bibitem{knapsack-video1} Khan Academy. (n.d.). \textit{Knapsack problem - video 1} [Video]. YouTube. \url{https://youtu.be/qxWu-SeAqe4?si=AO1W1K7zMeg6XN01}
+
+\bibitem{tsp-video} MIT OpenCourseWare. (2018, April 14). \textit{Traveling Salesman Problem (TSP) explanation} [Video]. YouTube. \url{https://www.youtube.com/watch?v=1FEP_sNb62k}
+
+\bibitem{knapsack-medium} Terh, F. (2019, March 29). \textit{How to solve the knapsack problem with dynamic programming}. Medium. \url{https://medium.com/@fabianterh/how-to-solve-the-knapsack-problem-with-dynamic-programming-eb88c706d3cf}
+
+\bibitem{knapsack-video2} TechTalk. (2025, March 6). \textit{Knapsack problem - video 2} [Video]. YouTube. \url{https://youtu.be/gCRw7BIrLPY?si=ZYqkJtxdG4y3z51x}
+
+\bibitem{comb-tutorchase} TutorChase. (n.d.). \textit{How does the comb sort algorithm work?} TutorChase. \url{https://www.tutorchase.com/answers/a-level/computer-science/how-does-the-comb-sort-algorithm-work}
+
+\bibitem{ssrn-selection} Weng, Y. (2021, April 27). \textit{An optimal selection algorithm}. SSRN. \url{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828471}
+
+\end{thebibliography}
+
+
+\end{document}
